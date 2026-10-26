@@ -4,40 +4,44 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#f7f6ef">
+  <meta name="theme-color" content="#faf4eb">
   <meta name="description" content="Egy kis angol, a saját hangodon. Sugi személyes beszédgyakorlója.">
   <link rel="icon" href="data:,">
   <title>Sugi Speak · Ma</title>
   <style>
     :root {
       color-scheme: light dark;
-      --bg: #f7f6ef;
-      --surface: #fffef9;
-      --ink: #243b32;
-      --muted: #56665b;
-      --green: #315b42;
+      --bg: #faf4eb;
+      --surface: #fffdf7;
+      --ink: #283c31;
+      --muted: #586454;
+      --green: #2e563e;
       --on-green: #ffffff;
-      --soft: #eaf0e3;
-      --line: #cbd2c3;
-      --accent: #8b472e;
+      --soft: #ecf0e3;
+      --line: #d8d2c4;
+      --accent: #955039;
       --warning-bg: #fff0b8;
       --warning-ink: #54400a;
       --focus: #a14620;
+      --listen: #edf1e7; --repeat: #f4ede3; --change: #f8eadf; --answer: #edf0e5;
+      --leaf-one: #315d42; --leaf-two: #52764f; --leaf-three: #719060; --pot: #a55f46; --pot-light: #d49b78;
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #18221d;
-        --surface: #212e26;
-        --ink: #eff2e7;
-        --muted: #becbbc;
-        --green: #b8d6ab;
-        --on-green: #182b1e;
-        --soft: #2c3d2e;
-        --line: #53634f;
-        --accent: #f0b398;
+        --bg: #17251f;
+        --surface: #213229;
+        --ink: #f5f0e5;
+        --muted: #c4ccba;
+        --green: #bfd6ad;
+        --on-green: #1d3125;
+        --soft: #2a3c2d;
+        --line: #58664f;
+        --accent: #efb59c;
         --warning-bg: #4a3c13;
         --warning-ink: #fff0b8;
         --focus: #ffc391;
+        --listen: #283a2e; --repeat: #3b3329; --change: #3f3028; --answer: #2b3b30;
+        --leaf-one: #bad5a8; --leaf-two: #98bb84; --leaf-three: #c5dcb0; --pot: #d39274; --pot-light: #f0c4a4;
       }
     }
     * { box-sizing: border-box; }
@@ -63,13 +67,16 @@
     p { margin: 0 0 1rem; }
     .muted { color: var(--muted); }
     .small { font-size: .875rem; }
-    .card { padding: 1.4rem; border: 1px solid var(--line); border-radius: 1.25rem; background: var(--surface); }
+    .card { padding: 1.4rem; border: 1px solid var(--line); border-radius: 1.6rem; background: var(--surface); }
     .lesson { margin: 1.75rem 0 .25rem; }
     .lesson h2 { font-size: 2rem; }
-    .button { display: flex; align-items: center; justify-content: center; gap: .5rem; width: 100%; min-height: 54px; padding: .8rem 1rem; border: 1px solid var(--green); border-radius: .8rem; background: var(--green); color: var(--on-green); font-weight: 700; text-align: center; line-height: 1.45; }
+    .button { display: flex; align-items: center; justify-content: center; gap: .5rem; width: 100%; min-height: 60px; padding: 1rem; border: 1px solid var(--green); border-radius: 1.1rem; background: var(--green); color: var(--on-green); font-weight: 700; text-align: center; line-height: 1.45; box-shadow: 0 3px 0 #17251f18; transition: transform 160ms ease, box-shadow 160ms ease; }
+    .button:active { transform: translateY(2px) scale(.99); box-shadow: none; }
     .button + .button { margin-top: .7rem; }
     .secondary { background: transparent; color: var(--green); }
     .text-button { display: inline-flex; align-items: center; justify-content: center; padding: .65rem .25rem; border: 0; background: transparent; color: var(--green); text-decoration: underline; text-underline-offset: .2em; font-weight: 550; line-height: 1.45; }
+    .lesson-row { display: flex; flex-wrap: wrap; align-items: center; gap: .15rem; margin: .35rem 0 .65rem; }
+    .lesson-row button:disabled { color: var(--muted); opacity: 1; text-decoration: none; border-style: dashed; }
     .rest { display: block; margin: .65rem auto 0; }
     .notice { padding: .8rem 1rem; border-radius: .7rem; background: var(--soft); color: var(--ink); margin-bottom: 1rem; }
     .warning { background: var(--warning-bg); color: var(--warning-ink); }
@@ -116,9 +123,93 @@
     @media (forced-colors: active) {
       .button, .card, .notice, .comparison { border: 1px solid CanvasText; }
     }
+    .svg-definitions { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .home-top, .lesson-top, .sheet-heading, .voice-rate-heading, .range-ends { display: flex; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap; }
+    .home-top { margin-bottom: .75rem; }
+    .home-top .eyebrow { margin: 0; flex: 1; }
+    .icon-button { display: inline-grid; place-items: center; flex: none; width: 46px; height: 46px; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--green); padding: 10px; }
+    .icon-button svg { width: 24px; height: 24px; }
+    .lesson-top { margin-bottom: .5rem; }
+    .lesson-top .eyebrow { margin: 0; flex: 1; }
+    .lesson-art { width: 90px; height: 76px; flex: none; }
+    .art-soft { fill: var(--soft); }
+    .art-green { fill: var(--green); }
+    .art-accent { fill: var(--accent); }
+    .art-paper { fill: var(--surface); }
+    .art-line { stroke: var(--green); }
+    .lesson-row { margin-block: .8rem; gap: .4rem; }
+    .lesson-row > span:first-child { margin-right: .25rem; }
+    .lesson-row button { position: relative; display: inline-grid; place-items: center; width: 46px; height: 46px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--green); text-decoration: none; font-weight: 700; }
+    .lesson-row button.is-complete { border-color: var(--green); background: var(--soft); }
+    .lesson-row button.is-complete::after { content: ''; position: absolute; right: 5px; top: 5px; width: 8px; height: 5px; border: solid var(--green); border-width: 0 0 2px 2px; transform: rotate(-45deg); background: var(--bg); }
+    .progress-dots { display: flex; flex-wrap: wrap; gap: 3px; margin: .25rem 2px 1.25rem; }
+    .progress-dot { width: 7px; height: 7px; flex: 0 0 7px; border: 1px solid var(--muted); border-radius: 50%; }
+    .progress-dot.is-done { background: var(--green); border-color: var(--green); }
+    .progress-dot.is-current { background: var(--accent); border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 1px; }
+    #task-content[data-stage="listen"] { background: var(--listen); }
+    #task-content[data-stage="repeat"] { background: var(--repeat); }
+    #task-content[data-stage="change"] { background: var(--change); }
+    #task-content[data-stage="answer"] { background: var(--answer); }
+    .stage-mark { display: flex; align-items: center; gap: .6rem; margin-bottom: 1.1rem; color: var(--green); font-size: .8rem; font-weight: 700; letter-spacing: .04em; }
+    .stage-mark svg { width: 30px; height: 30px; flex: none; }
+    .stage-mark span { overflow-wrap: anywhere; }
+    .plant { display: block; width: 100%; max-width: 22rem; height: auto; margin: .25rem auto 1rem; color: var(--green); overflow: visible; }
+    .plant .leaf { fill: var(--leaf-one); }
+    .plant .leaf-1 { fill: var(--leaf-two); }
+    .plant .leaf-2 { fill: var(--leaf-three); }
+    .plant .plant-pot { fill: var(--pot); }
+    .plant .pot-highlight { fill: var(--pot-light); }
+    .plant .ground { fill: var(--soft); }
+    .plant .flower-petal { fill: var(--accent); }
+    .plant .flower-centre { fill: var(--surface); }
+    .new-leaf { transform-box: fill-box; transform-origin: center bottom; animation: leaf-in 400ms ease-out both; }
+    @keyframes leaf-in { from { opacity: 0; transform: scale(.45); } to { opacity: 1; transform: scale(1); } }
+    .finish-icon { display: block; width: 100px; height: 84px; margin: 0 0 1.25rem; border-radius: 0; background: none; }
+    .finish-icon svg { width: 100%; height: 100%; }
+    #finish-summary { font: 400 2rem/1.3 Georgia, "Times New Roman", serif; letter-spacing: -.02em; }
+    #finish-garden { padding-block: .25rem; }
+    .said-pop { position: fixed; z-index: 5; bottom: max(1.25rem, env(safe-area-inset-bottom)); left: calc(50% - 27px); display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; background: var(--green); color: var(--on-green); box-shadow: 0 4px 20px #18251f24; opacity: 0; pointer-events: none; }
+    .said-pop svg { width: 28px; height: 28px; }
+    .said-pop.is-visible { animation: check-pop 320ms ease-out both; }
+    @keyframes check-pop { 0% { opacity: 0; transform: scale(.7); } 25% { opacity: 1; transform: scale(1.1); } 65% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
+    .voice-sheet { width: min(100%, 35rem); max-width: 100%; max-height: 90vh; max-height: 90dvh; margin: auto auto 0; padding: 1.5rem 1.25rem max(1.5rem, env(safe-area-inset-bottom)); overflow: auto; overscroll-behavior: contain; border: 1px solid var(--line); border-radius: 1.6rem 1.6rem 0 0; background: var(--bg); color: var(--ink); }
+    .voice-sheet::backdrop { background: #17251f70; }
+    .sheet-heading { margin-bottom: 1rem; }
+    .sheet-heading h2 { margin: 0; }
+    .voice-list { list-style: none; margin: 0 0 1.5rem; padding: 0; }
+    .voice-option { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr)); align-items: center; gap: .6rem; padding: .7rem 0; border-bottom: 1px solid var(--line); }
+    .voice-label { display: flex; align-items: center; gap: .65rem; min-height: 44px; min-width: 0; cursor: pointer; }
+    .voice-label input { flex: none; width: 20px; height: 20px; margin: 0; accent-color: var(--green); }
+    .voice-label > span { min-width: 0; overflow-wrap: anywhere; }
+    .voice-label strong { font-weight: 650; }
+    .voice-label .muted { display: block; }
+    .voice-preview { justify-self: end; min-width: 64px; min-height: 44px; padding: .5rem .65rem; border: 1px solid var(--line); border-radius: .75rem; background: var(--surface); color: var(--green); font-size: .9rem; font-weight: 650; }
+    .voice-rate-heading { font-weight: 650; }
+    #voice-rate { display: block; width: 100%; height: 44px; margin: .35rem 0 0; accent-color: var(--green); }
+    .range-ends { margin-bottom: 1.25rem; }
+    .voice-tip { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+      .button:active { transform: none; }
+      .said-pop.is-visible { opacity: 1; transform: none; }
+    }
   </style>
 </head>
 <body>
+  <svg class="svg-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="icon-gear" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-1 3-3 1-2 4 2 2v4l4 2 3-1 3 1 4-2v-4l2-2-2-4-3-1-1-3Z"/><circle cx="12" cy="11.5" r="3"/></g></symbol>
+    <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24"><path d="m5 12 4.5 5L19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="icon-listen" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M7 9a5 5 0 0 1 10 0c0 4-4 4-4 7a3 3 0 0 1-6 0M10 9a2 2 0 0 1 4 0c0 2-2 2-2 4M20 7a9 9 0 0 1 0 5M3 7a9 9 0 0 0 0 5"/></g></symbol>
+    <symbol id="icon-repeat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11c0 5-4 8-9 8H5l-3 3v-7a8 8 0 0 1 0-8c2-4 8-5 13-3 3 1 5 4 5 7Z"/><path d="M6 10h1m3 0h1m3 0h1" stroke-width="2.5"/></g></symbol>
+    <symbol id="icon-change" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h17l-4-4m4 4-4 4M21 17H4l4 4m-4-4 4-4"/></g></symbol>
+    <symbol id="icon-answer" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11c0 5-4 8-9 8H6l-4 3v-7a8 8 0 0 1 0-8c3-5 14-6 18 0Z"/><path d="m11 5 1.5 3.5 3.5.5-2.5 2.5.5 3.5-3-1.5L8 15l.5-3.5L6 9l3.5-.5Z"/></g></symbol>
+    <symbol id="art-handshake" viewBox="0 0 96 80"><ellipse class="art-soft" cx="48" cy="42" rx="44" ry="32"/><path class="art-green" d="M4 39 17 25l21 19-14 23Z"/><path class="art-accent" d="m92 38-14-15-21 21 15 21Z"/><g class="art-line" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m25 35 12-8c5-3 8 0 12 3l19 18c4 5-1 10-5 7l-14-12m14 12c3 5-3 9-7 5L43 48m13 12c1 4-4 7-7 4L37 53m12 11c-3 4-6 2-9-1L25 49"/><path d="m66 34-12-8-14 9c-5 4-1 8 4 6l8-5"/></g></symbol>
+    <symbol id="art-morning" viewBox="0 0 96 80"><ellipse class="art-soft" cx="48" cy="44" rx="43" ry="31"/><circle class="art-accent" cx="64" cy="28" r="14"/><g class="art-line" fill="none" stroke-width="2" stroke-linecap="round"><path d="M64 6v5M84 14l-4 4M89 32h-5M45 13l4 4M20 69h55"/><path class="art-paper" d="M25 35h35v19c0 17-35 17-35 0Z"/><path d="M60 39h7c12 0 12 17-7 17M34 28c-6-6 5-8 0-14M45 28c-6-6 5-8 0-14"/></g></symbol>
+    <symbol id="art-cafe" viewBox="0 0 96 80"><ellipse class="art-soft" cx="48" cy="44" rx="43" ry="31"/><g class="art-line" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path class="art-paper" d="M18 30h45v23c0 19-45 19-45 0Z"/><path fill="none" d="M63 35h8c17 0 15 24-8 22M12 70h65M32 22c-7-7 6-9 0-16M46 22c-7-7 6-9 0-16"/></g><path class="art-accent" d="M42 57c-15-7-9-17-2-10 7-9 17 0 2 10Z"/></symbol>
+    <symbol id="art-finish" viewBox="0 0 96 80"><circle class="art-soft" cx="44" cy="37" r="29"/><circle class="art-accent" cx="44" cy="37" r="19"/><g class="art-line" fill="none" stroke-width="2" stroke-linecap="round"><path d="M44 5v4M44 65v4M12 37h4M72 37h4M22 15l3 3M64 57l3 3M66 15l-3 3M24 57l-3 3"/></g><path class="art-green" d="M58 71c-4-21 6-30 24-32 0 18-8 29-24 32Z"/><path d="m58 72 16-23" fill="none" stroke="var(--surface)" stroke-width="1.3"/></symbol>
+  </defs></svg>
+
   <div class="shell">
     <header>
       <svg class="brand-mark" viewBox="0 0 28 32" aria-hidden="true"><path d="M14 29V13M14 21C2 21 2 7 2 7s12 0 12 14ZM14 14C14 3 26 3 26 3s0 11-12 11Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -129,15 +220,16 @@
     <noscript><p class="notice warning">A gyakorláshoz engedélyezd a JavaScriptet a böngésződben.</p></noscript>
     <main>
       <section id="home-screen" aria-labelledby="home-heading">
-        <p class="eyebrow">Ma · egy kis idő magadra</p>
+        <div class="home-top"><p class="eyebrow">Ma · egy kis idő magadra</p><button id="voice-open" class="icon-button" type="button" aria-label="Hang"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-gear"/></svg></button></div>
         <h1 id="home-heading" tabindex="-1">Szia, Sugi!</h1>
         <p class="muted">Egy kis angol, a saját hangodon.<br>Nem kell sietned.</p>
         <div class="card lesson">
-          <p class="eyebrow">L01 · Mai lecke</p>
+          <div class="lesson-top"><p id="lesson-label" class="eyebrow"></p><div id="lesson-art" aria-hidden="true"></div></div>
           <h2 id="lesson-title"></h2>
-          <p class="muted small">Köszönés, lakóhely, kedvenc időtöltések.<br>Teljes menet: kb. 15–20 perc.</p>
+          <p class="muted small"><span id="lesson-description"></span><br>Teljes menet: kb. 15–20 perc.</p>
           <p id="resume-note" class="small muted"></p>
           <button id="continue-button" class="button" type="button">Folytatom</button>
+          <div id="lesson-row" class="lesson-row small" role="group" aria-label="Leckék"></div>
           <button id="short-button" class="button secondary" type="button">Ma csak 12 perc</button>
           <p class="small muted" style="margin: .75rem 0 0">A rövid menet 5 feladat. Nem zárja le a teljes leckét.</p>
         </div>
@@ -147,15 +239,7 @@
         <section class="garden" aria-labelledby="garden-heading">
           <p class="eyebrow">Apránként növekszik</p>
           <h2 id="garden-heading">Beszédkert</h2>
-          <svg id="plant" class="plant" viewBox="0 0 320 180" role="img" aria-labelledby="plant-title">
-            <title id="plant-title">A beszédkerted növénye</title>
-            <path id="plant-stem" d="M160 133V87" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-            <g id="plant-leaves" fill="currentColor"></g>
-            <path class="pot" d="M131 137h58l-7 31h-44Z"/>
-            <rect class="pot" x="126" y="130" width="68" height="11" rx="4"/>
-            <path class="soil" d="M137 135h46" fill="none" stroke-width="2" stroke-linecap="round"/>
-            <path d="M112 169h96" fill="none" stroke="currentColor" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/>
-          </svg>
+          <svg id="plant" class="plant" role="img" aria-labelledby="plant-title"></svg>
           <p id="garden-note" class="small muted"></p>
           <p class="small muted">Minden befejezett, saját választ is tartalmazó nap után egy új levél nő. A kihagyott napok semmit sem vesznek el.</p>
         </section>
@@ -165,6 +249,7 @@
           <button id="home-button" class="text-button" type="button">← Ma</button>
           <span id="progress" aria-label="Feladat" role="status"></span>
         </div>
+        <div id="progress-dots" class="progress-dots" aria-hidden="true"></div>
         <p id="round-label" class="eyebrow"></p>
         <h1 id="task-heading" tabindex="-1"></h1>
         <p id="mode-note" class="small muted"></p>
@@ -172,13 +257,14 @@
         <div id="task-actions" class="actions"></div>
       </section>
       <section id="finish-screen" aria-labelledby="finish-heading" hidden>
-        <div class="finish-icon" aria-hidden="true">❧</div>
+        <div class="finish-icon" aria-hidden="true"><svg viewBox="0 0 96 80"><use href="#art-finish"/></svg></div>
         <p class="eyebrow">Lezárás</p>
         <h1 id="finish-heading" tabindex="-1">Mára ennyi.<br>Jó, hogy beszéltél.</h1>
         <p id="finish-summary"></p>
         <p class="small muted">A szabad válaszoknál megnyomott „Kimondtam” gombok alapján.</p>
         <p id="finish-mode" class="muted"></p>
         <p id="leaf-note" class="notice"></p>
+        <div id="finish-garden" hidden><svg id="finish-plant" class="plant" role="img"></svg></div>
         <details class="feedback">
           <summary>Szeretnél visszajelzést?</summary>
           <label for="feedback-prompt">Másold be ezt a ChatGPT-be:</label>
@@ -194,96 +280,1023 @@
       <p class="small muted">A saját tempódban. A saját szavaiddal.</p>
     </footer>
   </div>
+    <dialog id="voice-sheet" class="voice-sheet" aria-labelledby="voice-heading">
+      <div class="sheet-heading"><h2 id="voice-heading">Hang</h2><button id="voice-close" class="icon-button" type="button" aria-label="Hang bezárása"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-close"/></svg></button></div>
+      <p class="muted small">Válassz egy hangot, és hallgasd meg, melyikkel esik jól gyakorolni.</p>
+      <p id="voice-current" class="small"></p>
+      <p id="voice-empty" class="small muted" hidden>A böngésző még nem sorolt fel angol hangot. Az automatikus Próba gombbal így is megpróbálhatod.</p>
+      <ul id="voice-list" class="voice-list" aria-label="Angol hangok"></ul>
+      <div class="voice-rate-heading"><label for="voice-rate">Beszédtempó</label><output id="voice-rate-value" for="voice-rate">0,85×</output></div>
+      <input id="voice-rate" type="range" min="0.7" max="1" step="0.05" value="0.85">
+      <div class="range-ends small muted"><span>Lassabb</span><span>Természetesebb</span></div>
+      <p id="voice-status" class="notice small" role="status" hidden></p>
+      <p class="voice-tip small">Szebb hang ingyen: iPhone: Beállítások → Kisegítő lehetőségek → Felolvasott tartalom → Hangok → English → tölts le egy „Premium” vagy „Enhanced” hangot. Android: Beállítások → Szövegfelolvasó → Google → hangadatok telepítése → English (UK).</p>
+      <p class="small muted">Ezután nyisd meg újra az oldalt.</p>
+    </dialog>
+    <div id="said-pop" class="said-pop" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg></div>
   <script>
     (() => {
       'use strict';
 
       // Edit lesson content here. IDs also identify saved progress: keep them stable.
-      const LESSON = {
-        id: 'L01', title: 'Bemutatkozom',
-        dialogue: [
-          { en: "A: Hi, I'm Sam. What's your name?", hu: 'A: Szia, Sam vagyok. Téged hogy hívnak?' },
-          { en: "B: I'm Alex. Nice to meet you.", hu: 'B: Alex vagyok. Örülök, hogy megismerhetlek.' },
-          { en: 'A: Where do you live?', hu: 'A: Hol laksz?' },
-          { en: 'B: I live in a small town. What about you?', hu: 'B: Egy kisvárosban lakom. És te?' },
-          { en: 'A: I live in a city. What do you like doing?', hu: 'A: Egy nagyvárosban lakom. Mit szeretsz csinálni?' },
-          { en: 'B: I like cooking and watching films.', hu: 'B: Szeretek főzni és filmeket nézni.' }
-        ],
-        rounds: [
+      const CONTENT = {
+        "stages": {
+          "listen": {
+            "title": "Először hallgasd meg.",
+            "instruction": "Egy rövid párbeszéd. Koppints a gombra, és figyeld a mondatokat."
+          },
+          "repeat": {
+            "title": "Most te jössz.",
+            "instruction": "Mondd utána hangosan."
+          },
+          "change": {
+            "title": "Legyen a tiéd."
+          },
+          "answer": {
+            "title": "Válaszolj a saját szavaiddal.",
+            "instruction": "Mondd ki hangosan a válaszod! Utána a gombbal megnézhetsz egy példát."
+          }
+        },
+        "feedbackPrompt": "I'm learning English (about A2). I will say a few sentences about myself: my name, where I live, and what I like doing. Please listen, then give me only ONE short correction and one better version of my sentence. Speak slowly and simply. Then ask me one easy follow-up question.",
+        "lessons": [
           {
-            label: '1. kör · Köszönés', lines: [0, 1], repeatLine: 1,
-            change: 'Most a saját neveddel köszönj! Kitalált nevet is használhatsz.',
-            vocabHints: [ ["I'm …", '… vagyok'], ['My name is …', 'A nevem …'], ['Hi!', 'Szia!'], ['Hello!', 'Szia! / Helló!'], ['Nice to meet you.', 'Örülök, hogy megismerhetlek.'] ],
-            answers: [
-              { question: "Hi! What's your name?", meaning: 'Szia! Téged hogy hívnak?', starters: ["I'm …", 'My name is …'], example: "I'm Sugi. Nice to meet you.", exampleHu: 'Sugi vagyok. Örülök, hogy megismerhetlek.' },
-              { question: 'Hello! Can you tell me your name?', meaning: 'Szia! Megmondod a neved?', starters: ['My name is …', "Hi, I'm …"], example: 'My name is Alex. Nice to meet you.', exampleHu: 'Alex a nevem. Örülök, hogy megismerhetlek.' }
+            "id": "L01",
+            "title": "Bemutatkozom",
+            "dialogue": [
+              {
+                "en": "A: Hi, I'm Sam. What's your name?",
+                "hu": "A: Szia, Sam vagyok. Téged hogy hívnak?"
+              },
+              {
+                "en": "B: I'm Alex. Nice to meet you.",
+                "hu": "B: Alex vagyok. Örülök, hogy megismerhetlek."
+              },
+              {
+                "en": "A: Where do you live?",
+                "hu": "A: Hol laksz?"
+              },
+              {
+                "en": "B: I live in a small town. What about you?",
+                "hu": "B: Egy kisvárosban lakom. És te?"
+              },
+              {
+                "en": "A: I live in a city. What do you like doing?",
+                "hu": "A: Egy nagyvárosban lakom. Mit szeretsz csinálni?"
+              },
+              {
+                "en": "B: I like cooking and watching films.",
+                "hu": "B: Szeretek főzni és filmeket nézni."
+              }
+            ],
+            "rounds": [
+              {
+                "label": "1. kör · Köszönés",
+                "lines": [
+                  0,
+                  1
+                ],
+                "repeatLine": 1,
+                "change": "Most a saját neveddel köszönj! Kitalált nevet is használhatsz.",
+                "vocabHints": [
+                  [
+                    "I'm …",
+                    "… vagyok"
+                  ],
+                  [
+                    "My name is …",
+                    "A nevem …"
+                  ],
+                  [
+                    "Hi!",
+                    "Szia!"
+                  ],
+                  [
+                    "Hello!",
+                    "Szia! / Helló!"
+                  ],
+                  [
+                    "Nice to meet you.",
+                    "Örülök, hogy megismerhetlek."
+                  ]
+                ],
+                "answers": [
+                  {
+                    "question": "Hi! What's your name?",
+                    "meaning": "Szia! Téged hogy hívnak?",
+                    "starters": [
+                      "I'm …",
+                      "My name is …"
+                    ],
+                    "example": "I'm Sugi. Nice to meet you.",
+                    "exampleHu": "Sugi vagyok. Örülök, hogy megismerhetlek."
+                  },
+                  {
+                    "question": "Hello! Can you tell me your name?",
+                    "meaning": "Szia! Megmondod a neved?",
+                    "starters": [
+                      "My name is …",
+                      "Hi, I'm …"
+                    ],
+                    "example": "My name is Alex. Nice to meet you.",
+                    "exampleHu": "Alex a nevem. Örülök, hogy megismerhetlek."
+                  }
+                ]
+              },
+              {
+                "label": "2. kör · Ahol lakom",
+                "lines": [
+                  2,
+                  3
+                ],
+                "repeatLine": 3,
+                "change": "Most a saját városodról mondd! Elég a település vagy annak típusa. Valódi címet nem kell mondanod.",
+                "vocabHints": [
+                  [
+                    "I live in …",
+                    "…-ban/-ben lakom"
+                  ],
+                  [
+                    "a small town",
+                    "egy kisváros"
+                  ],
+                  [
+                    "a city",
+                    "egy nagyváros"
+                  ],
+                  [
+                    "a village",
+                    "egy falu"
+                  ],
+                  [
+                    "near …",
+                    "… közelében"
+                  ],
+                  [
+                    "What about you?",
+                    "És te?"
+                  ]
+                ],
+                "answers": [
+                  {
+                    "question": "Where do you live?",
+                    "meaning": "Hol laksz?",
+                    "starters": [
+                      "I live in …",
+                      "I live near …"
+                    ],
+                    "example": "I live in a small town. What about you?",
+                    "exampleHu": "Egy kisvárosban lakom. És te?"
+                  },
+                  {
+                    "question": "Do you live in a city or a small town?",
+                    "meaning": "Nagyvárosban vagy kisvárosban laksz?",
+                    "starters": [
+                      "I live in a …",
+                      "I live near …"
+                    ],
+                    "example": "I live in a city. What about you?",
+                    "exampleHu": "Egy nagyvárosban lakom. És te?"
+                  }
+                ]
+              },
+              {
+                "label": "3. kör · Amit szeretek",
+                "lines": [
+                  4,
+                  5
+                ],
+                "repeatLine": 5,
+                "change": "Most mondd el, te mit szeretsz csinálni! Egy vagy két időtöltés is elég.",
+                "vocabHints": [
+                  [
+                    "I like …",
+                    "Szeretek …"
+                  ],
+                  [
+                    "cooking",
+                    "főzni"
+                  ],
+                  [
+                    "watching films",
+                    "filmeket nézni"
+                  ],
+                  [
+                    "reading",
+                    "olvasni"
+                  ],
+                  [
+                    "walking",
+                    "sétálni"
+                  ],
+                  [
+                    "listening to music",
+                    "zenét hallgatni"
+                  ]
+                ],
+                "answers": [
+                  {
+                    "question": "What do you like doing?",
+                    "meaning": "Mit szeretsz csinálni?",
+                    "starters": [
+                      "I like …",
+                      "In my free time, I like …"
+                    ],
+                    "example": "I like cooking and watching films.",
+                    "exampleHu": "Szeretek főzni és filmeket nézni."
+                  },
+                  {
+                    "question": "What do you like doing in your free time?",
+                    "meaning": "Mit szeretsz csinálni a szabadidődben?",
+                    "starters": [
+                      "In my free time, I like …",
+                      "I like …"
+                    ],
+                    "example": "I like reading and walking.",
+                    "exampleHu": "Szeretek olvasni és sétálni."
+                  }
+                ]
+              }
+            ],
+            "tasks": [
+              {
+                "id": "r1-listen",
+                "round": 0,
+                "stage": "listen"
+              },
+              {
+                "id": "r1-repeat",
+                "round": 0,
+                "stage": "repeat"
+              },
+              {
+                "id": "r1-change",
+                "round": 0,
+                "stage": "change"
+              },
+              {
+                "id": "r1-answer",
+                "round": 0,
+                "stage": "answer"
+              },
+              {
+                "id": "r2-listen",
+                "round": 1,
+                "stage": "listen"
+              },
+              {
+                "id": "r2-repeat",
+                "round": 1,
+                "stage": "repeat"
+              },
+              {
+                "id": "r2-change",
+                "round": 1,
+                "stage": "change"
+              },
+              {
+                "id": "r2-answer",
+                "round": 1,
+                "stage": "answer"
+              },
+              {
+                "id": "r3-listen",
+                "round": 2,
+                "stage": "listen"
+              },
+              {
+                "id": "r3-repeat",
+                "round": 2,
+                "stage": "repeat"
+              },
+              {
+                "id": "r3-change",
+                "round": 2,
+                "stage": "change"
+              },
+              {
+                "id": "mixed-final",
+                "round": 2,
+                "stage": "answer",
+                "mixed": true
+              }
+            ],
+            "shortTaskIds": [
+              "r1-change",
+              "r1-answer",
+              "r2-change",
+              "r3-change",
+              "mixed-final"
+            ],
+            "mixed": {
+              "label": "3. kör · Minden együtt",
+              "title": "Egy kis beszélgetés.",
+              "instruction": "Válaszolj hangosan erre a három kérdésre, ebben a sorrendben! Most nincs előtted mintamondat. Nyugodtan gondolkodj.",
+              "starters": [
+                "I live in …",
+                "I like …"
+              ],
+              "vocabHints": [
+                [
+                  "I'm …",
+                  "… vagyok"
+                ],
+                [
+                  "a small town",
+                  "egy kisváros"
+                ],
+                [
+                  "a city",
+                  "egy nagyváros"
+                ],
+                [
+                  "cooking",
+                  "főzni"
+                ],
+                [
+                  "reading",
+                  "olvasni"
+                ],
+                [
+                  "watching films",
+                  "filmeket nézni"
+                ]
+              ]
+            },
+            "description": "Köszönés, lakóhely, kedvenc időtöltések."
+          },
+          {
+            "id": "L02",
+            "title": "Egy átlagos reggelem",
+            "description": "Reggeli szokások, utazás és egy kis indoklás.",
+            "dialogue": [
+              {
+                "en": "A: What do you usually do in the morning?",
+                "hu": "A: Mit szoktál csinálni reggel?"
+              },
+              {
+                "en": "B: I make breakfast and drink some tea.",
+                "hu": "B: Reggelit készítek, és iszom egy kis teát."
+              },
+              {
+                "en": "A: What do you do after breakfast?",
+                "hu": "A: Mit csinálsz reggeli után?"
+              },
+              {
+                "en": "B: I go to work.",
+                "hu": "B: Elmegyek dolgozni."
+              },
+              {
+                "en": "A: Do you listen to music on the way?",
+                "hu": "A: Hallgatsz zenét útközben?"
+              },
+              {
+                "en": "B: Yes, I do. It helps me wake up.",
+                "hu": "B: Igen. Segít felébredni."
+              }
+            ],
+            "rounds": [
+              {
+                "label": "1. kör · Reggeli szokások",
+                "lines": [
+                  0,
+                  1
+                ],
+                "repeatLine": 1,
+                "change": "Most mondd el, te mit szoktál csinálni reggel! Használd az I usually … kezdetet.",
+                "vocabHints": [
+                  [
+                    "usually",
+                    "általában"
+                  ],
+                  [
+                    "get up",
+                    "felkelni"
+                  ],
+                  [
+                    "have a shower",
+                    "lezuhanyozni"
+                  ],
+                  [
+                    "get dressed",
+                    "felöltözni"
+                  ],
+                  [
+                    "have breakfast",
+                    "reggelizni"
+                  ],
+                  [
+                    "yesterday",
+                    "tegnap"
+                  ]
+                ],
+                "answers": [
+                  {
+                    "question": "What do you usually do in the morning?",
+                    "meaning": "Mit szoktál csinálni reggel?",
+                    "starters": [
+                      "I usually …",
+                      "In the morning, I …"
+                    ],
+                    "example": "I usually have a shower and make breakfast.",
+                    "exampleHu": "Általában lezuhanyozom, és reggelit készítek.",
+                    "mixedPart": {
+                      "en": "I usually have a shower and make breakfast",
+                      "hu": "Általában lezuhanyozom, és reggelit készítek"
+                    }
+                  },
+                  {
+                    "question": "What do you usually do before breakfast?",
+                    "meaning": "Mit szoktál csinálni reggeli előtt?",
+                    "starters": [
+                      "Before breakfast, I usually …",
+                      "I usually …"
+                    ],
+                    "example": "I usually get dressed and make some tea.",
+                    "exampleHu": "Általában felöltözöm, és készítek egy kis teát.",
+                    "mixedPart": {
+                      "en": "I usually get dressed and make some tea",
+                      "hu": "Általában felöltözöm, és készítek egy kis teát"
+                    }
+                  }
+                ],
+                "repeatModel": {
+                  "en": "I usually make breakfast and drink some tea.",
+                  "hu": "Általában reggelit készítek, és iszom egy kis teát."
+                }
+              },
+              {
+                "label": "2. kör · Reggeli után",
+                "lines": [
+                  2,
+                  3
+                ],
+                "repeatLine": 3,
+                "change": "Mondd el, te mit csinálsz reggeli után! Munka, tanulás vagy otthoni teendő is lehet.",
+                "vocabHints": [
+                  [
+                    "after breakfast",
+                    "reggeli után"
+                  ],
+                  [
+                    "go to work",
+                    "elmenni dolgozni"
+                  ],
+                  [
+                    "study at home",
+                    "otthon tanulni"
+                  ],
+                  [
+                    "walk the dog",
+                    "megsétáltatni a kutyát"
+                  ],
+                  [
+                    "because",
+                    "mert"
+                  ],
+                  [
+                    "yesterday",
+                    "tegnap"
+                  ]
+                ],
+                "answers": [
+                  {
+                    "question": "What do you do after breakfast, and why?",
+                    "meaning": "Mit csinálsz reggeli után, és miért?",
+                    "starters": [
+                      "After breakfast, I … because …",
+                      "I usually … because …"
+                    ],
+                    "example": "After breakfast, I go to work because I start at nine.",
+                    "exampleHu": "Reggeli után elmegyek dolgozni, mert kilenckor kezdek.",
+                    "mixedPart": {
+                      "en": "I go to work after breakfast because I start at nine",
+                      "hu": "Reggeli után elmegyek dolgozni, mert kilenckor kezdek"
+                    }
+                  },
+                  {
+                    "question": "What did you do after breakfast yesterday?",
+                    "meaning": "Mit csináltál tegnap reggeli után?",
+                    "starters": [
+                      "Yesterday I …",
+                      "After breakfast yesterday, I …"
+                    ],
+                    "example": "Yesterday I walked the dog after breakfast.",
+                    "exampleHu": "Tegnap reggeli után megsétáltattam a kutyát.",
+                    "mixedPart": {
+                      "en": "Yesterday I walked the dog after breakfast",
+                      "hu": "Tegnap reggeli után megsétáltattam a kutyát"
+                    }
+                  }
+                ],
+                "repeatModel": {
+                  "en": "After breakfast, I go to work.",
+                  "hu": "Reggeli után elmegyek dolgozni."
+                }
+              },
+              {
+                "label": "3. kör · Útközben",
+                "lines": [
+                  4,
+                  5
+                ],
+                "repeatLine": 5,
+                "change": "Mondd el, mi segít neked felébredni útközben! Zene, séta vagy beszélgetés is lehet.",
+                "vocabHints": [
+                  [
+                    "on the way",
+                    "útközben"
+                  ],
+                  [
+                    "by bus",
+                    "busszal"
+                  ],
+                  [
+                    "by car",
+                    "autóval"
+                  ],
+                  [
+                    "listen to music",
+                    "zenét hallgatni"
+                  ],
+                  [
+                    "it helps me …",
+                    "segít nekem …"
+                  ],
+                  [
+                    "because",
+                    "mert"
+                  ]
+                ],
+                "answers": [
+                  {
+                    "question": "Do you listen to music on the way? Why?",
+                    "meaning": "Hallgatsz zenét útközben? Miért?",
+                    "starters": [
+                      "I listen to music because …",
+                      "It helps me …"
+                    ],
+                    "example": "I listen to music because it helps me wake up.",
+                    "exampleHu": "Zenét hallgatok, mert segít felébredni.",
+                    "mixedPart": {
+                      "en": "I listen to music because it helps me wake up",
+                      "hu": "Zenét hallgatok, mert segít felébredni"
+                    }
+                  },
+                  {
+                    "question": "How did you get to work yesterday, and why?",
+                    "meaning": "Mivel mentél tegnap dolgozni, és miért?",
+                    "starters": [
+                      "Yesterday I went … because …",
+                      "I went by … because …"
+                    ],
+                    "example": "Yesterday I went by bus because it was raining.",
+                    "exampleHu": "Tegnap busszal mentem, mert esett az eső.",
+                    "mixedPart": {
+                      "en": "Yesterday I went by bus because it was raining",
+                      "hu": "Tegnap busszal mentem, mert esett az eső"
+                    }
+                  }
+                ]
+              }
+            ],
+            "recall": {
+              "lessonId": "L01",
+              "round": 1,
+              "label": "Egy kis visszaidézés · L01",
+              "title": "Emlékszel?",
+              "instruction": "Egy kérdés az előző leckéből. Mondd ki a saját válaszod hangosan!"
+            },
+            "mixed": {
+              "label": "3. kör · Minden együtt",
+              "title": "Mesélj a reggeledről.",
+              "instruction": "Válaszolj hangosan erre a három kérdésre, ebben a sorrendben! Figyeld, mikor kérünk indoklást vagy tegnapi történetet.",
+              "starters": [
+                "I usually …",
+                "Yesterday I … because …"
+              ]
+            },
+            "tasks": [
+              {
+                "id": "recall-L01",
+                "stage": "answer",
+                "recall": true
+              },
+              {
+                "id": "r1-listen",
+                "round": 0,
+                "stage": "listen"
+              },
+              {
+                "id": "r1-repeat",
+                "round": 0,
+                "stage": "repeat"
+              },
+              {
+                "id": "r1-change",
+                "round": 0,
+                "stage": "change"
+              },
+              {
+                "id": "r1-answer",
+                "round": 0,
+                "stage": "answer"
+              },
+              {
+                "id": "r2-listen",
+                "round": 1,
+                "stage": "listen"
+              },
+              {
+                "id": "r2-repeat",
+                "round": 1,
+                "stage": "repeat"
+              },
+              {
+                "id": "r2-change",
+                "round": 1,
+                "stage": "change"
+              },
+              {
+                "id": "r2-answer",
+                "round": 1,
+                "stage": "answer"
+              },
+              {
+                "id": "r3-listen",
+                "round": 2,
+                "stage": "listen"
+              },
+              {
+                "id": "r3-repeat",
+                "round": 2,
+                "stage": "repeat"
+              },
+              {
+                "id": "r3-change",
+                "round": 2,
+                "stage": "change"
+              },
+              {
+                "id": "mixed-final",
+                "round": 2,
+                "stage": "answer",
+                "mixed": true
+              }
+            ],
+            "shortTaskIds": [
+              "recall-L01",
+              "r1-change",
+              "r2-change",
+              "r3-change",
+              "mixed-final"
             ]
           },
           {
-            label: '2. kör · Ahol lakom', lines: [2, 3], repeatLine: 3,
-            change: 'Most a saját városodról mondd! Elég a település vagy annak típusa. Valódi címet nem kell mondanod.',
-            vocabHints: [ ['I live in …', '…-ban/-ben lakom'], ['a small town', 'egy kisváros'], ['a city', 'egy nagyváros'], ['a village', 'egy falu'], ['near …', '… közelében'], ['What about you?', 'És te?'] ],
-            answers: [
-              { question: 'Where do you live?', meaning: 'Hol laksz?', starters: ['I live in …', 'I live near …'], example: 'I live in a small town. What about you?', exampleHu: 'Egy kisvárosban lakom. És te?' },
-              { question: 'Do you live in a city or a small town?', meaning: 'Nagyvárosban vagy kisvárosban laksz?', starters: ['I live in a …', 'I live near …'], example: 'I live in a city. What about you?', exampleHu: 'Egy nagyvárosban lakom. És te?' }
-            ]
-          },
-          {
-            label: '3. kör · Amit szeretek', lines: [4, 5], repeatLine: 5,
-            change: 'Most mondd el, te mit szeretsz csinálni! Egy vagy két időtöltés is elég.',
-            vocabHints: [ ['I like …', 'Szeretek …'], ['cooking', 'főzni'], ['watching films', 'filmeket nézni'], ['reading', 'olvasni'], ['walking', 'sétálni'], ['listening to music', 'zenét hallgatni'] ],
-            answers: [
-              { question: 'What do you like doing?', meaning: 'Mit szeretsz csinálni?', starters: ['I like …', 'In my free time, I like …'], example: 'I like cooking and watching films.', exampleHu: 'Szeretek főzni és filmeket nézni.' },
-              { question: 'What do you like doing in your free time?', meaning: 'Mit szeretsz csinálni a szabadidődben?', starters: ['In my free time, I like …', 'I like …'], example: 'I like reading and walking.', exampleHu: 'Szeretek olvasni és sétálni.' }
+            "id": "L03",
+            "title": "Kávézóban",
+            "description": "Ital, étel és egy teljes rendelés a kávézóban.",
+            "dialogue": [
+              {
+                "en": "A: Hello. What would you like?",
+                "hu": "A: Jó napot! Mit szeretnél?"
+              },
+              {
+                "en": "B: I'd like a tea, please.",
+                "hu": "B: Egy teát szeretnék, kérem."
+              },
+              {
+                "en": "A: Would you like anything to eat?",
+                "hu": "A: Szeretnél valamit enni is?"
+              },
+              {
+                "en": "B: Yes. Can I have a sandwich, please?",
+                "hu": "B: Igen. Kaphatnék egy szendvicset, kérem?"
+              },
+              {
+                "en": "A: Of course. Is that everything?",
+                "hu": "A: Természetesen. Ez lesz minden?"
+              },
+              {
+                "en": "B: Yes, thank you.",
+                "hu": "B: Igen, köszönöm."
+              }
+            ],
+            "rounds": [
+              {
+                "label": "1. kör · Egy ital",
+                "lines": [
+                  0,
+                  1
+                ],
+                "repeatLine": 1,
+                "change": "Most kérj egy italt, amit te választasz! Kezdheted így: I'd like …, please.",
+                "vocabHints": [
+                  [
+                    "I'd like …, please.",
+                    "…-t szeretnék, kérem."
+                  ],
+                  [
+                    "a coffee",
+                    "egy kávé"
+                  ],
+                  [
+                    "a hot chocolate",
+                    "egy forró csokoládé"
+                  ],
+                  [
+                    "some water",
+                    "egy kis víz"
+                  ],
+                  [
+                    "usually",
+                    "általában"
+                  ],
+                  [
+                    "yesterday",
+                    "tegnap"
+                  ]
+                ],
+                "answers": [
+                  {
+                    "question": "What would you like to drink?",
+                    "meaning": "Mit szeretnél inni?",
+                    "starters": [
+                      "I'd like …, please.",
+                      "Can I have …, please?"
+                    ],
+                    "example": "I'd like a tea, please.",
+                    "exampleHu": "Egy teát szeretnék, kérem.",
+                    "mixedPart": {
+                      "en": "I'd like a tea, please",
+                      "hu": "Egy teát szeretnék, kérem"
+                    }
+                  },
+                  {
+                    "question": "Can I get you a drink?",
+                    "meaning": "Hozhatok neked valamit inni?",
+                    "starters": [
+                      "I'd like …, please.",
+                      "Can I have …, please?"
+                    ],
+                    "example": "I'd like a hot chocolate, please.",
+                    "exampleHu": "Egy forró csokoládét szeretnék, kérem.",
+                    "mixedPart": {
+                      "en": "I'd like a hot chocolate, please",
+                      "hu": "Egy forró csokoládét szeretnék, kérem"
+                    }
+                  }
+                ]
+              },
+              {
+                "label": "2. kör · Valami ennivaló",
+                "lines": [
+                  2,
+                  3
+                ],
+                "repeatLine": 3,
+                "change": "Most kérj magadnak valami ennivalót! Használd a Can I have …? kezdetet.",
+                "vocabHints": [
+                  [
+                    "Can I have …?",
+                    "Kaphatnék …-t?"
+                  ],
+                  [
+                    "a croissant",
+                    "egy croissant"
+                  ],
+                  [
+                    "a piece of cake",
+                    "egy szelet sütemény"
+                  ],
+                  [
+                    "a sandwich",
+                    "egy szendvics"
+                  ],
+                  [
+                    "because",
+                    "mert"
+                  ],
+                  [
+                    "yesterday",
+                    "tegnap"
+                  ]
+                ],
+                "answers": [
+                  {
+                    "question": "What would you like to eat, and why?",
+                    "meaning": "Mit szeretnél enni, és miért?",
+                    "starters": [
+                      "Can I have …, please?",
+                      "I would like it because …"
+                    ],
+                    "example": "Can I have a sandwich, please? I need one because I'm hungry.",
+                    "exampleHu": "Kaphatnék egy szendvicset, kérem? Szükségem van rá, mert éhes vagyok.",
+                    "mixedPart": {
+                      "en": "I'd like a sandwich because I'm hungry",
+                      "hu": "Egy szendvicset szeretnék, mert éhes vagyok"
+                    }
+                  },
+                  {
+                    "question": "Which snack would you like, and why?",
+                    "meaning": "Melyik harapnivalót szeretnéd, és miért?",
+                    "starters": [
+                      "Can I have …, please?",
+                      "I would like it because …"
+                    ],
+                    "example": "Can I have a piece of cake, please? I'd like it because it's my birthday.",
+                    "exampleHu": "Kaphatnék egy szelet süteményt, kérem? Azért szeretném, mert születésnapom van.",
+                    "mixedPart": {
+                      "en": "I'd like a piece of cake because it's my birthday",
+                      "hu": "Egy szelet süteményt szeretnék, mert születésnapom van"
+                    }
+                  }
+                ]
+              },
+              {
+                "label": "3. kör · Ez lesz minden?",
+                "lines": [
+                  4,
+                  5
+                ],
+                "repeatLine": 5,
+                "change": "Fejezd be a rendelést! Mondhatod, hogy minden megvan, vagy kérhetsz még valamit.",
+                "vocabHints": [
+                  [
+                    "Yes, thank you.",
+                    "Igen, köszönöm."
+                  ],
+                  [
+                    "No, can I also have …?",
+                    "Nem, kaphatnék még …-t is?"
+                  ],
+                  [
+                    "a salad",
+                    "egy saláta"
+                  ],
+                  [
+                    "some water",
+                    "egy kis víz"
+                  ],
+                  [
+                    "because",
+                    "mert"
+                  ],
+                  [
+                    "yesterday",
+                    "tegnap"
+                  ]
+                ],
+                "answers": [
+                  {
+                    "question": "Is that everything, or would you like something else? Tell me why.",
+                    "meaning": "Ez lesz minden, vagy szeretnél még valamit? Mondd el azt is, miért!",
+                    "starters": [
+                      "No, can I also have …?",
+                      "I would like … because …"
+                    ],
+                    "example": "No, I'd also like some water because I'm thirsty.",
+                    "exampleHu": "Nem, még egy kis vizet is szeretnék, mert szomjas vagyok.",
+                    "mixedPart": {
+                      "en": "No, I'd also like some water because I'm thirsty",
+                      "hu": "Nem, még egy kis vizet is szeretnék, mert szomjas vagyok"
+                    }
+                  },
+                  {
+                    "question": "Is that everything? What did you have here yesterday?",
+                    "meaning": "Ez lesz minden? Mit ettél itt tegnap?",
+                    "starters": [
+                      "Yes, thank you. Yesterday I …",
+                      "Yesterday I had …"
+                    ],
+                    "example": "Yes, thank you. Yesterday I had a salad.",
+                    "exampleHu": "Igen, köszönöm. Tegnap egy salátát ettem.",
+                    "mixedPart": {
+                      "en": "Yes, thank you, and yesterday I had a salad",
+                      "hu": "Igen, köszönöm, és tegnap egy salátát ettem"
+                    }
+                  }
+                ]
+              }
+            ],
+            "recall": {
+              "lessonId": "L02",
+              "round": 0,
+              "label": "Egy kis visszaidézés · L02",
+              "title": "Emlékszel?",
+              "instruction": "Egy kérdés az előző leckéből. Mondd ki a saját válaszod hangosan!"
+            },
+            "mixed": {
+              "label": "3. kör · Minden együtt",
+              "title": "Add le a teljes rendelésed.",
+              "instruction": "Most te rendelsz. Válaszolj hangosan a pincér három kérdésére! Indokolj, vagy meséld el, mit ettél tegnap, amikor ezt kérdezi.",
+              "starters": [
+                "I'd like …, please.",
+                "No, can I also have …?"
+              ],
+              "closingLast": true
+            },
+            "tasks": [
+              {
+                "id": "recall-L02",
+                "stage": "answer",
+                "recall": true
+              },
+              {
+                "id": "r1-listen",
+                "round": 0,
+                "stage": "listen"
+              },
+              {
+                "id": "r1-repeat",
+                "round": 0,
+                "stage": "repeat"
+              },
+              {
+                "id": "r1-change",
+                "round": 0,
+                "stage": "change"
+              },
+              {
+                "id": "r1-answer",
+                "round": 0,
+                "stage": "answer"
+              },
+              {
+                "id": "r2-listen",
+                "round": 1,
+                "stage": "listen"
+              },
+              {
+                "id": "r2-repeat",
+                "round": 1,
+                "stage": "repeat"
+              },
+              {
+                "id": "r2-change",
+                "round": 1,
+                "stage": "change"
+              },
+              {
+                "id": "r2-answer",
+                "round": 1,
+                "stage": "answer"
+              },
+              {
+                "id": "r3-listen",
+                "round": 2,
+                "stage": "listen"
+              },
+              {
+                "id": "r3-repeat",
+                "round": 2,
+                "stage": "repeat"
+              },
+              {
+                "id": "r3-change",
+                "round": 2,
+                "stage": "change"
+              },
+              {
+                "id": "mixed-final",
+                "round": 2,
+                "stage": "answer",
+                "mixed": true
+              }
+            ],
+            "shortTaskIds": [
+              "recall-L02",
+              "r1-change",
+              "r2-change",
+              "r3-change",
+              "mixed-final"
             ]
           }
-        ],
-        stages: {
-          listen: { title: 'Először hallgasd meg.', instruction: 'Egy rövid párbeszéd. Koppints a gombra, és figyeld a mondatokat.' },
-          repeat: { title: 'Most te jössz.', instruction: 'Mondd utána hangosan.' },
-          change: { title: 'Legyen a tiéd.' },
-          answer: { title: 'Válaszolj a saját szavaiddal.', instruction: 'Mondd ki hangosan a válaszod! Utána a gombbal megnézhetsz egy példát.' }
-        },
-        tasks: [
-          { id: 'r1-listen', round: 0, stage: 'listen' },
-          { id: 'r1-repeat', round: 0, stage: 'repeat' },
-          { id: 'r1-change', round: 0, stage: 'change' },
-          { id: 'r1-answer', round: 0, stage: 'answer' },
-          { id: 'r2-listen', round: 1, stage: 'listen' },
-          { id: 'r2-repeat', round: 1, stage: 'repeat' },
-          { id: 'r2-change', round: 1, stage: 'change' },
-          { id: 'r2-answer', round: 1, stage: 'answer' },
-          { id: 'r3-listen', round: 2, stage: 'listen' },
-          { id: 'r3-repeat', round: 2, stage: 'repeat' },
-          { id: 'r3-change', round: 2, stage: 'change' },
-          { id: 'mixed-final', round: 2, stage: 'answer', mixed: true }
-        ],
-        shortTaskIds: ['r1-change', 'r1-answer', 'r2-change', 'r3-change', 'mixed-final'],
-        mixed: {
-          label: '3. kör · Minden együtt', title: 'Egy kis beszélgetés.',
-          instruction: 'Válaszolj hangosan erre a három kérdésre, ebben a sorrendben! Most nincs előtted mintamondat. Nyugodtan gondolkodj.',
-          starters: ['I live in …', 'I like …'],
-          vocabHints: [ ["I'm …", '… vagyok'], ['a small town', 'egy kisváros'], ['a city', 'egy nagyváros'], ['cooking', 'főzni'], ['reading', 'olvasni'], ['watching films', 'filmeket nézni'] ]
-        },
-        feedbackPrompt: "I'm learning English (about A2). I will say a few sentences about myself: my name, where I live, and what I like doing. Please listen, then give me only ONE short correction and one better version of my sentence. Speak slowly and simply. Then ask me one easy follow-up question."
+        ]
       };
 
       const KEY = 'sugi_speak_v1';
       const $ = id => document.getElementById(id);
-      const sequence = mode => mode === 'short'
-        ? LESSON.shortTaskIds.map(id => LESSON.tasks.find(task => task.id === id))
-        : LESSON.tasks;
+      const lessonById = id => CONTENT.lessons.find(item => item.id === id);
+      function sequence(mode, id = lesson.id) {
+        const item = lessonById(id);
+        return mode === 'short' ? item.shortTaskIds.map(taskId => item.tasks.find(task => task.id === taskId)) : item.tasks;
+      }
       function localDay() {
         const now = new Date();
         return [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-');
       }
+      function freshProgress() {
+        return {
+          mode: null, cursor: 0, completedTaskIds: [], fullCompleted: false,
+          runVariant: 1, finalOrder: [1, 0, 2], helpedTaskIds: [],
+          runs: { full: null, short: null }, lastPractised: 0
+        };
+      }
       function freshState() {
         return {
-          schemaVersion: 1, mode: null, cursor: 0, completedTaskIds: [],
-          fullCompleted: false, practiceDays: [], answersSpokenToday: { date: localDay(), count: 0 },
-          // Session metadata keeps question variants, shuffled order and help stable on reload.
-          runVariant: 1, finalOrder: [1, 0, 2], helpedTaskIds: [],
-          runs: { full: null, short: null }
+          schemaVersion: 2, lessonId: 'L01', practiceSerial: 0, voiceName: null, voiceRate: 0.85,
+          lessons: Object.fromEntries(CONTENT.lessons.map(item => [item.id, freshProgress()])),
+          practiceDays: [], answersSpokenToday: { date: localDay(), count: 0 }
         };
       }
       function validDate(value) {
@@ -298,33 +1311,59 @@
           runVariant: value.runVariant, finalOrder: [...value.finalOrder], helpedTaskIds: [...value.helpedTaskIds]
         };
       }
-      function validRun(value, mode) {
+      function validRun(value, mode, id) {
         if (!value || typeof value !== 'object') return false;
-        const tasks = sequence(mode);
+        const tasks = sequence(mode, id);
         if (!Number.isInteger(value.cursor) || value.cursor < 0 || value.cursor > tasks.length) return false;
         if (!Array.isArray(value.completedTaskIds)) return false;
         if (![0, 1].includes(value.runVariant) || !Array.isArray(value.finalOrder) || value.finalOrder.length !== 3 || [...value.finalOrder].sort().join(',') !== '0,1,2') return false;
         if (!Array.isArray(value.helpedTaskIds) || new Set(value.helpedTaskIds).size !== value.helpedTaskIds.length) return false;
-        if (!value.helpedTaskIds.every(id => tasks.some(task => task.id === id && task.stage === 'answer'))) return false;
+        if (!value.helpedTaskIds.every(taskId => tasks.some(task => task.id === taskId && task.stage === 'answer'))) return false;
         const completed = value.completedTaskIds;
         const hasCurrentAnswer = tasks[value.cursor]?.stage === 'answer' && completed.length === value.cursor + 1;
         if (completed.length !== value.cursor && !hasCurrentAnswer) return false;
-        if (!completed.every((id, index) => id === tasks[index]?.id)) return false;
+        if (!completed.every((taskId, index) => taskId === tasks[index]?.id)) return false;
         return mode !== null || (value.cursor === 0 && completed.length === 0 && value.helpedTaskIds.length === 0);
       }
-      function validState(value) {
-        if (!value || value.schemaVersion !== 1 || ![null, 'full', 'short'].includes(value.mode) || !validRun(value, value.mode)) return false;
-        if (typeof value.fullCompleted !== 'boolean' || !Array.isArray(value.practiceDays)) return false;
-        if (!value.practiceDays.every(validDate) || new Set(value.practiceDays).size !== value.practiceDays.length) return false;
+      function validShared(value) {
+        if (!Array.isArray(value.practiceDays) || !value.practiceDays.every(validDate) || new Set(value.practiceDays).size !== value.practiceDays.length) return false;
         const daily = value.answersSpokenToday;
-        if (!daily || !validDate(daily.date) || !Number.isSafeInteger(daily.count) || daily.count < 0) return false;
-        // Older v1 saves have just the active run. Validate before upgrading them.
+        return Boolean(daily && validDate(daily.date) && Number.isSafeInteger(daily.count) && daily.count >= 0);
+      }
+      function validProgress(value, id, legacy = false) {
+        if (!value || ![null, 'full', 'short'].includes(value.mode) || !validRun(value, value.mode, id) || typeof value.fullCompleted !== 'boolean') return false;
+        if (!legacy && (!Number.isSafeInteger(value.lastPractised) || value.lastPractised < 0)) return false;
         if ('runs' in value) {
           if (!value.runs || typeof value.runs !== 'object') return false;
-          if (!['full', 'short'].every(mode => value.runs[mode] === null || validRun(value.runs[mode], mode))) return false;
+          if (!['full', 'short'].every(mode => value.runs[mode] === null || validRun(value.runs[mode], mode, id))) return false;
           if (value.mode && (!value.runs[value.mode] || JSON.stringify(runSnapshot(value)) !== JSON.stringify(runSnapshot(value.runs[value.mode])))) return false;
-        }
+        } else if (!legacy) return false;
         return true;
+      }
+      function unlocked(id, value = state) {
+        const index = CONTENT.lessons.findIndex(item => item.id === id);
+        return index === 0 || (index > 0 && value.lessons[CONTENT.lessons[index - 1].id].fullCompleted);
+      }
+      function validState(value) {
+        if (!value || value.schemaVersion !== 2 || !value.lessons || !lessonById(value.lessonId) || !validShared(value)) return false;
+        if (value.voiceName !== undefined && value.voiceName !== null && typeof value.voiceName !== 'string') return false;
+        if (value.voiceRate !== undefined && (!Number.isFinite(value.voiceRate) || value.voiceRate < 0.7 || value.voiceRate > 1)) return false;
+        if (!Number.isSafeInteger(value.practiceSerial) || value.practiceSerial < 0) return false;
+        if (!CONTENT.lessons.every(item => validProgress(value.lessons[item.id], item.id) && value.lessons[item.id].lastPractised <= value.practiceSerial)) return false;
+        return unlocked(value.lessonId, value);
+      }
+      function migrateV1(value) {
+        if (!validShared(value) || !validProgress(value, 'L01', true)) throw new Error('Invalid v1 save');
+        const migrated = freshState();
+        const oldProgress = migrated.lessons.L01;
+        Object.assign(oldProgress, runSnapshot(value), { mode: value.mode, fullCompleted: value.fullCompleted });
+        if ('runs' in value) {
+          ['full', 'short'].forEach(mode => { oldProgress.runs[mode] = value.runs[mode] ? runSnapshot(value.runs[mode]) : null; });
+        } else if (value.mode) oldProgress.runs[value.mode] = runSnapshot(value);
+        migrated.practiceDays = value.practiceDays;
+        migrated.answersSpokenToday = value.answersSpokenToday;
+        migrated.practiceSerial = oldProgress.lastPractised = value.mode || value.fullCompleted ? 1 : 0;
+        return migrated;
       }
 
       let storageOK = true;
@@ -337,12 +1376,11 @@
           const raw = localStorage.getItem(KEY);
           if (raw === null) return freshState();
           const parsed = JSON.parse(raw);
-          if (!validState(parsed)) throw new Error('Invalid save');
-          if (!('runs' in parsed)) {
-            parsed.runs = { full: null, short: null };
-            if (parsed.mode) parsed.runs[parsed.mode] = runSnapshot(parsed);
-          }
-          return parsed;
+          const value = parsed?.schemaVersion === 1 ? migrateV1(parsed) : parsed;
+          if (!validState(value)) throw new Error('Invalid save');
+          value.voiceName = value.voiceName ?? null;
+          value.voiceRate = value.voiceRate ?? 0.85;
+          return value;
         } catch (_) {
           // Never replace an unreadable/corrupt save. This page now uses memory only.
           storageFailed();
@@ -350,11 +1388,28 @@
         }
       }
       let state = readState();
+      let lesson = lessonById(state.lessonId);
+      let progress = state.lessons[state.lessonId];
+      function activateLesson(id) {
+        state.lessonId = id;
+        lesson = lessonById(id);
+        progress = state.lessons[id];
+      }
       function saveState() {
-        if (state.mode) state.runs[state.mode] = runSnapshot(state);
+        if (progress.mode) progress.runs[progress.mode] = runSnapshot(progress);
         if (!storageOK) return;
         try { localStorage.setItem(KEY, JSON.stringify(state)); }
         catch (_) { storageFailed(); }
+      }
+      function markPractice() {
+        state.practiceSerial += 1;
+        progress.lastPractised = state.practiceSerial;
+      }
+      function allCompleted() { return CONTENT.lessons.every(item => state.lessons[item.id].fullCompleted); }
+      function recommendedLesson() {
+        const next = CONTENT.lessons.find(item => unlocked(item.id) && !state.lessons[item.id].fullCompleted);
+        if (next) return next.id;
+        return CONTENT.lessons.reduce((oldest, item) => state.lessons[item.id].lastPractised < state.lessons[oldest.id].lastPractised ? item : oldest).id;
       }
       function syncDay() {
         const today = localDay();
@@ -367,52 +1422,152 @@
         }
       }
 
-      // Prefer local English; otherwise let an English voice or the browser handle it.
+      // Browser voices are free to select; names are quality hints, not an audio measurement.
       let synth = null;
       let voice = null;
+      let englishVoices = [];
+      let onlyNoveltyVoices = false;
       let activeUtterance = null;
       let speechToken = 0;
+      const android = /android/i.test(navigator.userAgent);
+      const noveltyVoice = /\b(fred|albert|zarvox|bad\s*news|good\s*news|bahh|bells|boing|bubbles|cellos|deranged|hysterical|junior|pipe\s*organ|organ|jester|superstar|trinoids|whisper|wobble|ralph)\b/i;
       try {
         if ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window) synth = window.speechSynthesis;
       } catch (_) { /* Text practice remains available. */ }
+      function voiceQuality(item) {
+        return /premium|enhanced|neural|natural|siri/i.test(item.name) || (android && /google/i.test(item.name)) ? 1 : 0;
+      }
+      function voiceLanguage(item) {
+        return /^en[-_]GB$/i.test(item.lang) ? 0 : /^en[-_]US$/i.test(item.lang) ? 1 : 2;
+      }
       function refreshVoices() {
-        voice = null;
+        englishVoices = [];
+        onlyNoveltyVoices = false;
         try {
-          const englishVoices = synth ? synth.getVoices().filter(v => /^en(?:[-_]|$)/i.test(v.lang)) : [];
-          const localVoices = englishVoices.filter(v => v.localService);
-          const available = localVoices.length ? localVoices : englishVoices;
-          voice = available.find(v => /^en[-_]GB$/i.test(v.lang))
-            || available.find(v => /^en[-_]US$/i.test(v.lang)) || available[0] || null;
-        } catch (_) { /* Some browsers expose the API without usable voices. */ }
+          const listed = synth ? synth.getVoices().filter(item => /^en(?:[-_]|$)/i.test(item.lang)) : [];
+          englishVoices = listed.filter(item => !noveltyVoice.test(item.name));
+          onlyNoveltyVoices = listed.length > 0 && englishVoices.length === 0;
+          englishVoices.sort((a, b) => voiceQuality(b) - voiceQuality(a)
+            || voiceLanguage(a) - voiceLanguage(b)
+            || Number(Boolean(b.localService)) - Number(Boolean(a.localService))
+            || a.name.localeCompare(b.name));
+          englishVoices = englishVoices.filter((item, index, all) => all.findIndex(other => other.name === item.name && other.lang === item.lang) === index);
+        } catch (_) { /* An empty or delayed list still permits the browser's en-GB default. */ }
+        voice = englishVoices.find(item => item.name === state.voiceName) || englishVoices[0] || null;
       }
       function cancelAudio() {
         speechToken += 1;
         activeUtterance = null;
         try { if (synth) synth.cancel(); } catch (_) { /* Navigation must still work. */ }
       }
-      function speak(text) {
+      function stripSpeaker(text) { return text.replace(/^\s*[AB]:\s*/gm, ''); }
+      function audioError() {
+        activeUtterance = null;
+        $('audio-notice').hidden = false;
+        $('voice-status').textContent = 'A próba most nem szólalt meg. A szöveges gyakorlás továbbra is működik.';
+        $('voice-status').hidden = false;
+      }
+      function speakParts(parts) {
         cancelAudio();
         refreshVoices();
         const token = speechToken;
-        try {
-          if (!synth) throw new Error('Speech synthesis unavailable');
-          activeUtterance = new SpeechSynthesisUtterance(text);
-          if (voice) activeUtterance.voice = voice;
-          activeUtterance.lang = voice ? voice.lang : 'en-GB';
-          activeUtterance.rate = 0.9;
-          activeUtterance.onend = () => { if (token === speechToken) activeUtterance = null; };
-          activeUtterance.onerror = event => {
-            if (token !== speechToken || event.error === 'canceled' || event.error === 'interrupted') return;
-            activeUtterance = null;
-            $('audio-notice').hidden = false;
-          };
-          $('audio-notice').hidden = true;
-          synth.speak(activeUtterance);
-        } catch (_) { $('audio-notice').hidden = false; }
+        const mainVoice = voice;
+        const secondVoice = englishVoices.find(item => item !== mainVoice) || mainVoice;
+        let cursor = 0;
+        $('audio-notice').hidden = true;
+        $('voice-status').hidden = true;
+        function playNext() {
+          if (token !== speechToken) return;
+          if (cursor === parts.length) { activeUtterance = null; return; }
+          const part = parts[cursor++];
+          const selected = part.voice || (part.speaker === 'B' ? secondVoice : mainVoice);
+          try {
+            if (!synth || onlyNoveltyVoices) throw new Error('No usable speech voice');
+            const utterance = new SpeechSynthesisUtterance(stripSpeaker(part.text));
+            if (selected) utterance.voice = selected;
+            utterance.lang = selected ? selected.lang : 'en-GB';
+            utterance.rate = state.voiceRate;
+            utterance.onend = () => {
+              if (token !== speechToken) return;
+              activeUtterance = null;
+              playNext();
+            };
+            utterance.onerror = event => {
+              if (token !== speechToken || event.error === 'canceled' || event.error === 'interrupted') return;
+              cursor = parts.length;
+              audioError();
+            };
+            activeUtterance = utterance;
+            synth.speak(utterance);
+          } catch (_) { cursor = parts.length; audioError(); }
+        }
+        playNext();
+      }
+      function speak(text, selectedVoice = null) { speakParts([{ text, voice: selectedVoice }]); }
+      function speakDialogue(lines) {
+        speakParts(lines.map(text => ({ text, speaker: /^\s*B:/.test(text) ? 'B' : 'A' })));
+      }
+      function updateVoiceSummary() {
+        const selectedMissing = state.voiceName && !englishVoices.some(item => item.name === state.voiceName);
+        $('voice-current').textContent = selectedMissing
+          ? 'A választott hang most nem érhető el. Egyelőre az automatikus hangot használjuk.'
+          : 'Most ezt használjuk: ' + (voice ? voice.name : 'a böngésző angol hangja') + '.';
+        $('voice-rate-value').textContent = state.voiceRate.toFixed(2).replace('.', ',') + '×';
+        $('voice-rate').value = String(state.voiceRate);
+        $('voice-rate').setAttribute('aria-valuetext', state.voiceRate.toFixed(2).replace('.', ',') + '-szörös tempó');
+      }
+      function renderVoiceOptions() {
+        const list = $('voice-list');
+        list.replaceChildren();
+        [null, ...englishVoices].forEach(item => {
+          const row = node('li', undefined, 'voice-option');
+          const label = node('label', undefined, 'voice-label');
+          const radio = node('input');
+          radio.type = 'radio';
+          radio.name = 'voice-choice';
+          radio.value = item ? item.name : '';
+          radio.checked = item ? state.voiceName === item.name : !englishVoices.some(available => available.name === state.voiceName);
+          const words = node('span');
+          words.append(node('strong', item ? item.name : 'Automatikus · ajánlott'));
+          if (item) words.append(node('span', /^en[-_]GB$/i.test(item.lang) ? 'Brit angol' : /^en[-_]US$/i.test(item.lang) ? 'Amerikai angol' : 'Angol', 'small muted'));
+          label.append(radio, words);
+          radio.addEventListener('change', () => {
+            cancelAudio();
+            state.voiceName = item ? item.name : null;
+            saveState();
+            refreshVoices();
+            updateVoiceSummary();
+          });
+          const preview = button('Próba', () => speak("Hi, I'm Sugi. Nice to meet you.", item));
+          preview.className = 'voice-preview';
+          preview.setAttribute('aria-label', 'Próba: ' + (item ? item.name : 'Automatikus'));
+          row.append(label, preview);
+          list.append(row);
+        });
+        $('voice-empty').hidden = englishVoices.length > 0;
+        updateVoiceSummary();
+      }
+      function openVoiceSheet() {
+        cancelAudio();
+        refreshVoices();
+        renderVoiceOptions();
+        $('voice-status').hidden = true;
+        const sheet = $('voice-sheet');
+        if (typeof sheet.showModal === 'function') sheet.showModal();
+        else sheet.setAttribute('open', '');
+        $('voice-close').focus();
+      }
+      function closeVoiceSheet() {
+        cancelAudio();
+        const sheet = $('voice-sheet');
+        if (typeof sheet.close === 'function') sheet.close();
+        else sheet.removeAttribute('open');
+        if (screen === 'home') $('voice-open').focus();
       }
       if (synth) {
-        if (typeof synth.addEventListener === 'function') synth.addEventListener('voiceschanged', refreshVoices);
-        else synth.onvoiceschanged = refreshVoices;
+        const changed = () => { refreshVoices(); if ($('voice-sheet').open) renderVoiceOptions(); };
+        if (typeof synth.addEventListener === 'function') synth.addEventListener('voiceschanged', changed);
+        else synth.onvoiceschanged = changed;
       }
 
       function node(tag, text, className) {
@@ -451,15 +1606,18 @@
         wrapper.append(list);
         return wrapper;
       }
-      function spokenLine(index) { return LESSON.dialogue[index].en.replace(/^[AB]:\s*/, ''); }
+      function spokenLine(index) { return lesson.dialogue[index].en.replace(/^[AB]:\s*/, ''); }
       function answerContent(task) {
-        if (!task.mixed) return LESSON.rounds[task.round].answers[state.runVariant];
-        const answers = state.finalOrder.map(index => LESSON.rounds[index].answers[1 - state.runVariant]);
+        if (task.recall) return lessonById(lesson.recall.lessonId).rounds[lesson.recall.round].answers[progress.runVariant];
+        if (!task.mixed) return lesson.rounds[task.round].answers[progress.runVariant];
+        const answers = progress.finalOrder.map(index => lesson.rounds[index].answers[1 - progress.runVariant]);
+        const lowerStart = text => /^I\b/.test(text) ? text : text[0].toLowerCase() + text.slice(1);
+        const combine = (parts, conjunction) => parts[0] + ', ' + conjunction + ' ' + lowerStart(parts[1]) + '. ' + parts[2] + '.';
         return {
           questions: answers.map(answer => ({ en: answer.question, hu: answer.meaning })),
-          starters: LESSON.mixed.starters,
-          example: answers.map(answer => answer.example).join(' '),
-          exampleHu: answers.map(answer => answer.exampleHu).join(' ')
+          starters: lesson.mixed.starters,
+          example: lesson.id === 'L01' ? answers.map(answer => answer.example).join(' ') : combine(answers.map(answer => answer.mixedPart.en), 'and'),
+          exampleHu: lesson.id === 'L01' ? answers.map(answer => answer.exampleHu).join(' ') : combine(answers.map(answer => answer.mixedPart.hu), 'és')
         };
       }
 
@@ -471,9 +1629,10 @@
         actionAt = performance.now();
         return true;
       }
-      function isActive() { return state.mode !== null && state.cursor < sequence(state.mode).length; }
+      function isActive() { return progress.mode !== null && progress.cursor < sequence(progress.mode).length; }
       function showScreen(name, focus = true) {
         cancelAudio();
+        if ($('voice-sheet').open) closeVoiceSheet();
         screen = name;
         ['home', 'practice', 'finish'].forEach(id => { $(id + '-screen').hidden = id !== name; });
         document.title = 'Sugi Speak · ' + ({ home: 'Ma', practice: 'Gyakorlás', finish: 'Lezárás' })[name];
@@ -483,37 +1642,97 @@
           window.scrollTo(0, 0);
         }
       }
-      function renderGarden() {
-        const leaves = $('plant-leaves');
-        leaves.replaceChildren();
+      function svgNode(tag, attributes = {}) {
+        const item = document.createElementNS('http://www.w3.org/2000/svg', tag);
+        Object.entries(attributes).forEach(([key, value]) => item.setAttribute(key, String(value)));
+        return item;
+      }
+      function icon(name, className = '') {
+        const art = name.startsWith('art-');
+        const svg = svgNode('svg', { viewBox: art ? '0 0 96 80' : '0 0 24 24', 'aria-hidden': 'true', class: className });
+        svg.append(svgNode('use', { href: '#' + name }));
+        return svg;
+      }
+      let saidTimer = null;
+      function showSaidFeedback() {
+        const pop = $('said-pop');
+        clearTimeout(saidTimer);
+        pop.classList.remove('is-visible');
+        void pop.offsetWidth;
+        pop.classList.add('is-visible');
+        saidTimer = setTimeout(() => pop.classList.remove('is-visible'), 320);
+      }
+      function drawPlant(svg, prefix, animateLeaf = false) {
         const count = state.practiceDays.length;
-        const top = 113 - Math.max(0, count - 1) * 17;
-        $('plant').setAttribute('viewBox', '0 ' + Math.min(0, top - 45) + ' 320 ' + (180 - Math.min(0, top - 45)));
-        $('plant-stem').setAttribute('d', 'M160 133V' + Math.min(87, top - 6));
+        const top = count ? 180 - (count - 1) * 20 : 205;
+        const minY = Math.min(120, 150 - count * 20);
+        const height = 280 - minY;
+        svg.setAttribute('viewBox', '0 ' + minY + ' 320 ' + height);
+        svg.setAttribute('width', '320');
+        svg.setAttribute('height', String(height));
+        svg.setAttribute('aria-labelledby', prefix + '-title');
+        const title = svgNode('title', { id: prefix + '-title' });
+        title.textContent = 'A beszédkerted növénye';
+        const ground = svgNode('ellipse', { cx: 160, cy: 270, rx: 76, ry: 8, class: 'ground' });
+        const stem = svgNode('path', { id: prefix + '-stem', d: 'M160 228V' + top, fill: 'none', stroke: 'currentColor', 'stroke-width': 3, 'stroke-linecap': 'round' });
+        const leaves = svgNode('g', { id: prefix + '-leaves' });
         state.practiceDays.forEach((day, index) => {
-          const leaf = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-          const y = 113 - index * 17;
+          const y = 205 - index * 20;
           const right = index % 2 === 0;
-          leaf.setAttribute('d', right
-            ? `M160 ${y}C166 ${y - 25} 192 ${y - 29} 193 ${y - 29}C193 ${y - 8} 181 ${y + 3} 160 ${y}Z`
-            : `M160 ${y}C154 ${y - 25} 128 ${y - 29} 127 ${y - 29}C127 ${y - 8} 139 ${y + 3} 160 ${y}Z`);
-          leaf.setAttribute('data-day', day);
+          const leaf = svgNode('path', {
+            d: right ? `M160 ${y}C164 ${y - 22} 191 ${y - 29} 207 ${y - 29}C204 ${y - 8} 184 ${y + 6} 160 ${y}Z`
+              : `M160 ${y}C156 ${y - 22} 129 ${y - 29} 113 ${y - 29}C116 ${y - 8} 136 ${y + 6} 160 ${y}Z`,
+            class: 'leaf leaf-' + (index % 3) + (animateLeaf && index === count - 1 ? ' new-leaf' : ''),
+            'data-day': day
+          });
           leaves.append(leaf);
         });
-        $('garden-note').textContent = count ? 'A leveleid megmaradnak. A kert holnap is megvár.' : 'Az első levél egy befejezett beszélgetős menet után nő.';
+        const pot = svgNode('path', { d: 'M119 231h82l-10 35h-62Z', class: 'plant-pot' });
+        const lip = svgNode('rect', { x: 114, y: 223, width: 92, height: 13, rx: 5, class: 'plant-pot' });
+        const highlight = svgNode('path', { d: 'M125 230h69v3h-69Z', class: 'pot-highlight' });
+        svg.replaceChildren(title, ground, stem, leaves, pot, lip, highlight);
+        if (count >= 7) {
+          const flower = svgNode('g', { id: prefix + '-flower', transform: 'translate(160 ' + (top - 13) + ')' });
+          for (let i = 0; i < 6; i++) flower.append(svgNode('ellipse', { cx: 0, cy: -9, rx: 5.5, ry: 9, transform: 'rotate(' + i * 60 + ')', class: 'flower-petal' }));
+          flower.append(svgNode('circle', { cx: 0, cy: 0, r: 5, class: 'flower-centre' }));
+          svg.append(flower);
+        }
+      }
+      function renderGarden() {
+        drawPlant($('plant'), 'plant');
+        $('garden-note').textContent = state.practiceDays.length ? 'A leveleid megmaradnak. A kert holnap is megvár.' : 'Az első levél egy befejezett beszélgetős menet után nő.';
       }
       function showHome(focus = true) {
         syncDay();
-        const fullRun = state.runs.full;
-        $('resume-note').textContent = fullRun && fullRun.cursor < sequence('full').length
-          ? 'Innen folytatod: ' + (fullRun.cursor + 1) + ' / ' + sequence('full').length + ' · teljes menet'
+        const targetId = recommendedLesson();
+        const target = lessonById(targetId);
+        const targetProgress = state.lessons[targetId];
+        const fullRun = targetProgress.runs.full;
+        $('lesson-label').textContent = targetId + ' · Mai lecke';
+        $('lesson-art').replaceChildren(icon(({ L01: 'art-handshake', L02: 'art-morning', L03: 'art-cafe' })[targetId], 'lesson-art'));
+        $('lesson-title').textContent = target.title;
+        $('lesson-description').textContent = target.description;
+        $('resume-note').textContent = !allCompleted() && fullRun && fullRun.cursor < sequence('full', targetId).length
+          ? 'Innen folytatod: ' + (fullRun.cursor + 1) + ' / ' + sequence('full', targetId).length + ' · teljes menet'
           : 'Ma is kezdhetsz egy új beszélgetést.';
-        $('full-completed-note').hidden = !state.fullCompleted;
+        const row = $('lesson-row');
+        row.replaceChildren(node('span', 'Leckék:'));
+        CONTENT.lessons.forEach((item, index) => {
+          if (index) { const dot = node('span', '·'); dot.setAttribute('aria-hidden', 'true'); row.append(dot); }
+          const choice = button(String(index + 1), () => start('full', item.id));
+          choice.className = 'text-button' + (state.lessons[item.id].fullCompleted ? ' is-complete' : '');
+          choice.id = 'lesson-' + item.id;
+          choice.disabled = !unlocked(item.id);
+          choice.setAttribute('aria-label', (index + 1) + '. lecke: ' + item.title + (choice.disabled ? ' · még zárva' : ''));
+          row.append(choice);
+        });
+        $('full-completed-note').hidden = !targetProgress.fullCompleted;
         $('rest-note').hidden = true;
         renderGarden();
         showScreen('home', focus);
       }
       function shuffledOrder() {
+        if (lesson.mixed.closingLast) return Math.random() < 0.5 ? [0, 1, 2] : [1, 0, 2];
         const order = [0, 1, 2];
         for (let i = order.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -521,62 +1740,73 @@
         }
         return order.join(',') === '0,1,2' ? [1, 2, 0] : order;
       }
-      function start(mode) {
-        if (screen !== 'home') return;
+      function start(mode, id = recommendedLesson(), forceFresh = false) {
+        if (screen !== 'home' || !unlocked(id)) return;
         actionAt = performance.now();
         syncDay();
-        if (state.mode) state.runs[state.mode] = runSnapshot(state);
-        state.mode = mode;
-        const run = state.runs[mode];
-        if (run && run.cursor < sequence(mode).length) {
-          Object.assign(state, runSnapshot(run));
+        if (progress.mode) progress.runs[progress.mode] = runSnapshot(progress);
+        activateLesson(id);
+        progress.mode = mode;
+        const run = progress.runs[mode];
+        if (!forceFresh && run && run.cursor < sequence(mode).length) {
+          Object.assign(progress, runSnapshot(run));
         } else {
-          state.cursor = 0;
-          state.completedTaskIds = [];
-          state.helpedTaskIds = [];
-          state.runVariant = 1 - (run ? run.runVariant : state.runVariant);
-          state.finalOrder = shuffledOrder();
+          progress.cursor = 0;
+          progress.completedTaskIds = [];
+          progress.helpedTaskIds = [];
+          progress.runVariant = 1 - (run ? run.runVariant : progress.runVariant);
+          progress.finalOrder = shuffledOrder();
         }
+        markPractice();
         saveState();
         renderPractice();
       }
       function renderPractice(focus = true) {
         syncDay();
-        const tasks = sequence(state.mode);
-        const task = tasks[state.cursor];
+        const tasks = sequence(progress.mode);
+        const task = tasks[progress.cursor];
         if (!task) { showHome(focus); return; }
         cancelAudio();
-        const round = task.mixed ? null : LESSON.rounds[task.round];
-        const stage = LESSON.stages[task.stage];
+        const round = task.mixed || task.recall ? null : lesson.rounds[task.round];
+        const stage = CONTENT.stages[task.stage];
         const content = $('task-content');
         const actions = $('task-actions');
         content.replaceChildren();
+        content.dataset.stage = task.stage;
+        const stageMark = node('div', undefined, 'stage-mark');
+        stageMark.append(icon('icon-' + task.stage), node('span', ({ listen: 'Hallgatás', repeat: 'Utánmondás', change: 'Saját változat', answer: 'Saját válasz' })[task.stage]));
+        content.append(stageMark);
         actions.replaceChildren();
-        $('progress').textContent = (state.cursor + 1) + ' / ' + tasks.length;
-        $('round-label').textContent = task.mixed ? LESSON.mixed.label : round.label;
-        $('task-heading').textContent = task.mixed ? LESSON.mixed.title : stage.title;
-        $('mode-note').textContent = state.mode === 'short' ? 'Rövid menet · kb. 12 perc' : 'Gyakorlás · a saját tempódban';
-        content.append(node('p', task.mixed ? LESSON.mixed.instruction : (round.change && task.stage === 'change' ? round.change : stage.instruction), 'instruction'));
+        const dots = $('progress-dots');
+        dots.replaceChildren();
+        tasks.forEach((_, index) => dots.append(node('span', undefined, 'progress-dot ' + (index < progress.cursor ? 'is-done' : index === progress.cursor ? 'is-current' : 'is-todo'))));
+        $('progress').textContent = (progress.cursor + 1) + ' / ' + tasks.length;
+        $('round-label').textContent = task.recall ? lesson.recall.label : task.mixed ? lesson.mixed.label : round.label;
+        $('task-heading').textContent = task.recall ? lesson.recall.title : task.mixed ? lesson.mixed.title : stage.title;
+        $('mode-note').textContent = progress.mode === 'short' ? 'Rövid menet · kb. 12 perc' : 'Gyakorlás · a saját tempódban';
+        content.append(node('p', task.recall ? lesson.recall.instruction : task.mixed ? lesson.mixed.instruction : (task.stage === 'change' ? round.change : stage.instruction), 'instruction'));
 
         const handlePrimary = () => {
-          if (screen !== 'practice' || tasks[state.cursor]?.id !== task.id || !acceptTap()) return;
+          if (screen !== 'practice' || tasks[progress.cursor]?.id !== task.id || !acceptTap()) return;
           syncDay();
-          if (task.stage === 'answer' && !state.completedTaskIds.includes(task.id)) {
-            state.completedTaskIds.push(task.id);
+          if (task.stage !== 'listen' && !progress.completedTaskIds.includes(task.id)) showSaidFeedback();
+          markPractice();
+          if (task.stage === 'answer' && !progress.completedTaskIds.includes(task.id)) {
+            progress.completedTaskIds.push(task.id);
             state.answersSpokenToday.count += 1;
             saveState();
             renderPractice(false);
             $('example-heading').focus();
             return;
           }
-          if (!state.completedTaskIds.includes(task.id)) state.completedTaskIds.push(task.id);
-          state.cursor += 1;
-          if (state.cursor === tasks.length) {
-            const eligible = tasks.some(item => item.stage === 'answer' && state.completedTaskIds.includes(item.id));
+          if (!progress.completedTaskIds.includes(task.id)) progress.completedTaskIds.push(task.id);
+          progress.cursor += 1;
+          if (progress.cursor === tasks.length) {
+            const eligible = tasks.some(item => item.stage === 'answer' && progress.completedTaskIds.includes(item.id));
             const today = localDay();
             const newLeaf = eligible && !state.practiceDays.includes(today);
             if (newLeaf) state.practiceDays.push(today);
-            if (state.mode === 'full') state.fullCompleted = true;
+            if (progress.mode === 'full') progress.fullCompleted = true;
             saveState();
             showFinish(newLeaf);
           } else {
@@ -586,11 +1816,12 @@
         };
 
         if (task.stage === 'listen') {
-          round.lines.forEach(index => content.append(modelLine(LESSON.dialogue[index])));
-          content.append(button('▶ Meghallgatom / újra hallgatom', () => speak(round.lines.map(spokenLine).join(' ')), true));
+          round.lines.forEach(index => content.append(modelLine(lesson.dialogue[index])));
+          content.append(button('▶ Meghallgatom / újra hallgatom', () => speakDialogue(round.lines.map(index => lesson.dialogue[index].en)), true));
         } else if (task.stage === 'repeat') {
-          content.append(modelLine(LESSON.dialogue[round.repeatLine]));
-          content.append(button('▶ Még egyszer', () => speak(spokenLine(round.repeatLine)), true));
+          const repeatModel = round.repeatModel || lesson.dialogue[round.repeatLine];
+          content.append(modelLine({ en: stripSpeaker(repeatModel.en), hu: stripSpeaker(repeatModel.hu) }));
+          content.append(button('▶ Még egyszer', () => speak(repeatModel.en.replace(/^[AB]:\s*/, '')), true));
         } else if (task.stage === 'change') {
           content.append(wordBank(round.vocabHints));
         } else {
@@ -603,10 +1834,10 @@
           });
           content.append(button('▶ Kérdés meghallgatása', () => speak(questions.map(question => question.en).join(' ')), true));
           const help = node('div', undefined, 'help');
-          if (!state.helpedTaskIds.includes(task.id)) {
+          if (!progress.helpedTaskIds.includes(task.id)) {
             const helpButton = button('Segíts', () => {
-              if (screen !== 'practice' || tasks[state.cursor]?.id !== task.id) return;
-              state.helpedTaskIds.push(task.id);
+              if (screen !== 'practice' || tasks[progress.cursor]?.id !== task.id) return;
+              progress.helpedTaskIds.push(task.id);
               saveState();
               renderPractice(false);
               $('help-heading').focus();
@@ -623,10 +1854,10 @@
               list.append(item);
             });
             help.append(heading, list);
-            if (task.mixed) help.append(wordBank(LESSON.mixed.vocabHints));
+            if (task.mixed && lesson.mixed.vocabHints) help.append(wordBank(lesson.mixed.vocabHints));
           }
           content.append(help);
-          if (state.completedTaskIds.includes(task.id)) {
+          if (progress.completedTaskIds.includes(task.id)) {
             const comparison = node('div', undefined, 'comparison');
             const heading = node('h2', 'Egy lehetséges válasz');
             heading.id = 'example-heading';
@@ -636,7 +1867,7 @@
             content.append(comparison);
           }
         }
-        const said = task.stage === 'answer' && state.completedTaskIds.includes(task.id);
+        const said = task.stage === 'answer' && progress.completedTaskIds.includes(task.id);
         const primary = button(task.stage === 'listen' || said ? 'Tovább' : 'Kimondtam', handlePrimary);
         primary.id = 'primary-action';
         actions.append(primary);
@@ -647,7 +1878,9 @@
       }
       function showFinish(newLeaf) {
         updateFinishSummary();
-        $('finish-mode').textContent = state.mode === 'short'
+        $('finish-garden').hidden = !newLeaf;
+        if (newLeaf) drawPlant($('finish-plant'), 'finish-plant', true);
+        $('finish-mode').textContent = progress.mode === 'short'
           ? 'A rövid menetet befejezted. A teljes leckét máskor is végiggyakorolhatod.'
           : 'A teljes leckét végiggyakoroltad. Bármikor visszatérhetsz hozzá.';
         $('leaf-note').textContent = newLeaf ? 'Ma új levél nőtt a beszédkertedben.' : 'A mai leveled már ott van a kertben. Minden leveled megmarad.';
@@ -656,9 +1889,31 @@
         showScreen('finish');
       }
 
-      $('lesson-title').textContent = LESSON.title;
-      $('feedback-prompt').textContent = LESSON.feedbackPrompt;
-      $('continue-button').addEventListener('click', () => start('full'));
+      $('voice-open').addEventListener('click', openVoiceSheet);
+      $('voice-close').addEventListener('click', closeVoiceSheet);
+      $('voice-sheet').addEventListener('close', cancelAudio);
+      $('voice-sheet').addEventListener('cancel', cancelAudio);
+      $('voice-sheet').addEventListener('keydown', event => {
+        if (event.key !== 'Tab') return;
+        const controls = [...$('voice-sheet').querySelectorAll('button:not(:disabled), input:not(:disabled)')].filter(item => item.getClientRects().length);
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if ((event.shiftKey && document.activeElement === first) || (!event.shiftKey && document.activeElement === last)) {
+          event.preventDefault();
+          (event.shiftKey ? last : first).focus();
+        }
+      });
+      $('voice-sheet').addEventListener('click', event => {
+        const bounds = $('voice-sheet').getBoundingClientRect();
+        if (event.target === $('voice-sheet') && (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom)) closeVoiceSheet();
+      });
+      $('voice-rate').addEventListener('input', () => {
+        state.voiceRate = Number($('voice-rate').value);
+        saveState();
+        updateVoiceSummary();
+      });
+      $('feedback-prompt').textContent = CONTENT.feedbackPrompt;
+      $('continue-button').addEventListener('click', () => start('full', recommendedLesson(), allCompleted()));
       $('short-button').addEventListener('click', () => start('short'));
       $('home-button').addEventListener('click', () => showHome());
       $('finish-home-button').addEventListener('click', () => showHome());
@@ -666,10 +1921,11 @@
       $('restart-button').addEventListener('click', () => {
         cancelAudio();
         if (!window.confirm('Újrakezded ezt a menetet? A feladatok az elejéről indulnak. A leveleid, a mai válaszaid száma és a teljes lecke korábbi befejezése megmarad.')) return;
-        state.cursor = 0;
-        state.completedTaskIds = [];
-        state.helpedTaskIds = [];
-        if (state.mode === null) state.mode = 'full';
+        if (screen === 'home') activateLesson(recommendedLesson());
+        progress.cursor = 0;
+        progress.completedTaskIds = [];
+        progress.helpedTaskIds = [];
+        if (progress.mode === null) progress.mode = 'full';
         saveState();
         if (screen === 'practice') renderPractice();
         else showHome();
