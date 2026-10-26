@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f7f6ef">
+  <meta name="description" content="Egy kis angol, a saját hangodon. Sugi személyes beszédgyakorlója.">
+  <link rel="icon" href="data:,">
+  <title>Sugi Speak · Ma</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f6ef;
+      --surface: #fffef9;
+      --ink: #243b32;
+      --muted: #56665b;
+      --green: #315b42;
+      --on-green: #ffffff;
+      --soft: #eaf0e3;
+      --line: #cbd2c3;
+      --accent: #8b472e;
+      --warning-bg: #fff0b8;
+      --warning-ink: #54400a;
+      --focus: #a14620;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #18221d;
+        --surface: #212e26;
+        --ink: #eff2e7;
+        --muted: #becbbc;
+        --green: #b8d6ab;
+        --on-green: #182b1e;
+        --soft: #2c3d2e;
+        --line: #53634f;
+        --accent: #f0b398;
+        --warning-bg: #4a3c13;
+        --warning-ink: #fff0b8;
+        --focus: #ffc391;
+      }
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 1rem/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    button, textarea { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    button, a { min-height: 44px; min-width: 44px; }
+    button { cursor: pointer; overflow-wrap: anywhere; }
+    button:disabled { cursor: default; }
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+    h1:focus, h2:focus { outline: none; }
+    .shell { width: min(100%, 35rem); margin-inline: auto; padding: 1.25rem 1.25rem max(1.25rem, env(safe-area-inset-bottom)); }
+    header { display: flex; align-items: center; gap: .6rem; padding: .25rem 0 1.75rem; }
+    .brand-mark { width: 28px; height: 32px; color: var(--green); flex: none; }
+    .brand { font-weight: 750; letter-spacing: -.03em; font-size: 1.2rem; }
+    .brand span { font-weight: 450; color: var(--muted); }
+    .eyebrow { margin: 0 0 .5rem; color: var(--accent); font-size: .8rem; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+    h1, h2, h3, p { overflow-wrap: anywhere; }
+    h1 { margin: 0 0 .75rem; font: 400 2.65rem/1.12 Georgia, "Times New Roman", serif; letter-spacing: -.04em; }
+    h2 { margin: 0 0 .75rem; font: 400 1.85rem/1.2 Georgia, "Times New Roman", serif; letter-spacing: -.025em; }
+    h3 { margin: 0 0 .75rem; font-size: 1rem; }
+    p { margin: 0 0 1rem; }
+    .muted { color: var(--muted); }
+    .small { font-size: .875rem; }
+    .card { padding: 1.4rem; border: 1px solid var(--line); border-radius: 1.25rem; background: var(--surface); }
+    .lesson { margin: 1.75rem 0 .25rem; }
+    .lesson h2 { font-size: 2rem; }
+    .button { display: flex; align-items: center; justify-content: center; gap: .5rem; width: 100%; min-height: 54px; padding: .8rem 1rem; border: 1px solid var(--green); border-radius: .8rem; background: var(--green); color: var(--on-green); font-weight: 700; text-align: center; line-height: 1.45; }
+    .button + .button { margin-top: .7rem; }
+    .secondary { background: transparent; color: var(--green); }
+    .text-button { display: inline-flex; align-items: center; justify-content: center; padding: .65rem .25rem; border: 0; background: transparent; color: var(--green); text-decoration: underline; text-underline-offset: .2em; font-weight: 550; line-height: 1.45; }
+    .rest { display: block; margin: .65rem auto 0; }
+    .notice { padding: .8rem 1rem; border-radius: .7rem; background: var(--soft); color: var(--ink); margin-bottom: 1rem; }
+    .warning { background: var(--warning-bg); color: var(--warning-ink); }
+    .garden { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); text-align: center; }
+    .garden h2 { font-size: 1.65rem; }
+    .plant { display: block; width: 100%; height: 180px; margin: .25rem auto 1rem; color: var(--green); }
+    .plant .pot { fill: var(--accent); }
+    .plant .soil { stroke: var(--bg); }
+    .practice-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: -1rem 0 1.25rem; }
+    #progress { flex: none; font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 650; }
+    #task-heading { font-size: 2.2rem; }
+    #task-content { margin: 1.25rem 0; }
+    .dialogue-line + .dialogue-line { border-top: 1px solid var(--line); padding-top: 1rem; }
+    .english { font-size: 1.35rem; line-height: 1.5; font-weight: 600; margin-bottom: .35rem; }
+    .gloss { color: var(--muted); font-size: .95rem; }
+    .instruction { font-size: 1.1rem; }
+    .word-bank { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+    .word-bank dl { margin: 0; }
+    .word-bank dl div { margin-bottom: .65rem; }
+    .word-bank dt { font-weight: 650; }
+    .word-bank dd { margin: 0; color: var(--muted); font-size: .95rem; }
+    .help { margin-top: 1rem; }
+    .starters { margin: .5rem 0 1rem; padding-left: 1.25rem; }
+    .starters li { margin: .5rem 0; }
+    .comparison { margin-top: 1.25rem; padding: 1.1rem; background: var(--soft); border-radius: .8rem; }
+    .comparison h2 { font: 700 1rem/1.5 system-ui, sans-serif; letter-spacing: normal; }
+    .question + .question { margin-top: 1rem; }
+    .actions { margin-top: 1.25rem; }
+    .finish-icon { display: grid; place-items: center; width: 54px; height: 54px; margin: 0 0 1.25rem; border-radius: 50%; background: var(--soft); color: var(--green); font-size: 1.7rem; }
+    #finish-summary { font-size: 1.3rem; font-weight: 600; }
+    .feedback { margin-top: 1.5rem; }
+    .feedback summary { padding: .8rem 0; min-height: 44px; cursor: pointer; color: var(--green); font-weight: 650; }
+    .feedback label { display: block; margin: 1rem 0 .75rem; }
+    textarea { display: block; width: 100%; min-height: 16rem; resize: vertical; padding: 1rem; border: 1px solid var(--line); border-radius: .7rem; background: var(--surface); color: var(--ink); line-height: 1.6; }
+    #copy-button { margin-top: .75rem; }
+    #copy-status { margin-top: .75rem; }
+    footer { margin-top: 2.25rem; padding-top: 1rem; border-top: 1px solid var(--line); text-align: center; }
+    footer p { margin-top: .5rem; }
+    @media (max-width: 350px) {
+      .shell { padding-inline: 1rem; }
+      .card { padding: 1.1rem; }
+      h1 { font-size: 2.3rem; }
+    }
+    @media (forced-colors: active) {
+      .button, .card, .notice, .comparison { border: 1px solid CanvasText; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <svg class="brand-mark" viewBox="0 0 28 32" aria-hidden="true"><path d="M14 29V13M14 21C2 21 2 7 2 7s12 0 12 14ZM14 14C14 3 26 3 26 3s0 11-12 11Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="brand">sugi <span>speak</span></div>
+    </header>
+    <p id="storage-notice" class="notice warning small" role="status" hidden>A böngésződ most nem menti a haladást.</p>
+    <p id="audio-notice" class="notice small" role="status" hidden>Az angol hang most nem érhető el. A szöveggel tovább tudsz gyakorolni.</p>
+    <noscript><p class="notice warning">A gyakorláshoz engedélyezd a JavaScriptet a böngésződben.</p></noscript>
+    <main>
+      <section id="home-screen" aria-labelledby="home-heading">
+        <p class="eyebrow">Ma · egy kis idő magadra</p>
+        <h1 id="home-heading" tabindex="-1">Szia, Sugi!</h1>
+        <p class="muted">Egy kis angol, a saját hangodon.<br>Nem kell sietned.</p>
+        <div class="card lesson">
+          <p class="eyebrow">L01 · Mai lecke</p>
+          <h2 id="lesson-title"></h2>
+          <p class="muted small">Köszönés, lakóhely, kedvenc időtöltések.<br>Teljes menet: kb. 15–20 perc.</p>
+          <p id="resume-note" class="small muted"></p>
+          <button id="continue-button" class="button" type="button">Folytatom</button>
+          <button id="short-button" class="button secondary" type="button">Ma csak 12 perc</button>
+          <p class="small muted" style="margin: .75rem 0 0">A rövid menet 5 feladat. Nem zárja le a teljes leckét.</p>
+        </div>
+        <button id="rest-button" class="text-button rest small" type="button">Pihenek ma</button>
+        <p id="rest-note" class="small muted" role="status" hidden>Rendben. A lecke és a kert megvár.</p>
+        <p id="full-completed-note" class="small muted" hidden>Ezt a leckét már végiggyakoroltad. Bármikor visszatérhetsz hozzá.</p>
+        <section class="garden" aria-labelledby="garden-heading">
+          <p class="eyebrow">Apránként növekszik</p>
+          <h2 id="garden-heading">Beszédkert</h2>
+          <svg id="plant" class="plant" viewBox="0 0 320 180" role="img" aria-labelledby="plant-title">
+            <title id="plant-title">A beszédkerted növénye</title>
+            <path id="plant-stem" d="M160 133V87" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <g id="plant-leaves" fill="currentColor"></g>
+            <path class="pot" d="M131 137h58l-7 31h-44Z"/>
+            <rect class="pot" x="126" y="130" width="68" height="11" rx="4"/>
+            <path class="soil" d="M137 135h46" fill="none" stroke-width="2" stroke-linecap="round"/>
+            <path d="M112 169h96" fill="none" stroke="currentColor" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <p id="garden-note" class="small muted"></p>
+          <p class="small muted">Minden befejezett, saját választ is tartalmazó nap után egy új levél nő. A kihagyott napok semmit sem vesznek el.</p>
+        </section>
+      </section>
+      <section id="practice-screen" aria-labelledby="task-heading" hidden>
+        <div class="practice-top">
+          <button id="home-button" class="text-button" type="button">← Ma</button>
+          <span id="progress" aria-label="Feladat" role="status"></span>
+        </div>
+        <p id="round-label" class="eyebrow"></p>
+        <h1 id="task-heading" tabindex="-1"></h1>
+        <p id="mode-note" class="small muted"></p>
+        <div id="task-content" class="card"></div>
+        <div id="task-actions" class="actions"></div>
+      </section>
+      <section id="finish-screen" aria-labelledby="finish-heading" hidden>
+        <div class="finish-icon" aria-hidden="true">❧</div>
+        <p class="eyebrow">Lezárás</p>
+        <h1 id="finish-heading" tabindex="-1">Mára ennyi.<br>Jó, hogy beszéltél.</h1>
+        <p id="finish-summary"></p>
+        <p class="small muted">A szabad válaszoknál megnyomott „Kimondtam” gombok alapján.</p>
+        <p id="finish-mode" class="muted"></p>
+        <p id="leaf-note" class="notice"></p>
+        <details class="feedback">
+          <summary>Szeretnél visszajelzést?</summary>
+          <label for="feedback-prompt">Másold be ezt a ChatGPT-be:</label>
+          <textarea id="feedback-prompt" lang="en" readonly spellcheck="false"></textarea>
+          <button id="copy-button" class="button secondary" type="button">Szöveg másolása</button>
+          <p id="copy-status" class="small muted" role="status" hidden></p>
+        </details>
+        <div class="actions"><button id="finish-home-button" class="button" type="button">Vissza a mához</button></div>
+      </section>
+    </main>
+    <footer>
+      <button id="restart-button" class="text-button small" type="button">Lecke újrakezdése</button>
+      <p class="small muted">A saját tempódban. A saját szavaiddal.</p>
+    </footer>
+  </div>
+  <script>
+    (() => {
+      'use strict';
+
+      // Edit lesson content here. IDs also identify saved progress: keep them stable.
+      const LESSON = {
+        id: 'L01', title: 'Bemutatkozom',
+        dialogue: [
+          { en: "A: Hi, I'm Sam. What's your name?", hu: 'A: Szia, Sam vagyok. Téged hogy hívnak?' },
+          { en: "B: I'm Alex. Nice to meet you.", hu: 'B: Alex vagyok. Örülök, hogy megismerhetlek.' },
+          { en: 'A: Where do you live?', hu: 'A: Hol laksz?' },
+          { en: 'B: I live in a small town. What about you?', hu: 'B: Egy kisvárosban lakom. És te?' },
+          { en: 'A: I live in a city. What do you like doing?', hu: 'A: Egy nagyvárosban lakom. Mit szeretsz csinálni?' },
+          { en: 'B: I like cooking and watching films.', hu: 'B: Szeretek főzni és filmeket nézni.' }
+        ],
+        rounds: [
+          {
+            label: '1. kör · Köszönés', lines: [0, 1], repeatLine: 1,
+            change: 'Most a saját neveddel köszönj! Kitalált nevet is használhatsz.',
+            vocabHints: [ ["I'm …", '… vagyok'], ['My name is …', 'A nevem …'], ['Hi!', 'Szia!'], ['Hello!', 'Szia! / Helló!'], ['Nice to meet you.', 'Örülök, hogy megismerhetlek.'] ],
+            answers: [
+              { question: "Hi! What's your name?", meaning: 'Szia! Téged hogy hívnak?', starters: ["I'm …", 'My name is …'], example: "I'm Sugi. Nice to meet you.", exampleHu: 'Sugi vagyok. Örülök, hogy megismerhetlek.' },
+              { question: 'Hello! Can you tell me your name?', meaning: 'Szia! Megmondod a neved?', starters: ['My name is …', "Hi, I'm …"], example: 'My name is Alex. Nice to meet you.', exampleHu: 'Alex a nevem. Örülök, hogy megismerhetlek.' }
+            ]
+          },
+          {
+            label: '2. kör · Ahol lakom', lines: [2, 3], repeatLine: 3,
+            change: 'Most a saját városodról mondd! Elég a település vagy annak típusa. Valódi címet nem kell mondanod.',
+            vocabHints: [ ['I live in …', '…-ban/-ben lakom'], ['a small town', 'egy kisváros'], ['a city', 'egy nagyváros'], ['a village', 'egy falu'], ['near …', '… közelében'], ['What about you?', 'És te?'] ],
+            answers: [
+              { question: 'Where do you live?', meaning: 'Hol laksz?', starters: ['I live in …', 'I live near …'], example: 'I live in a small town. What about you?', exampleHu: 'Egy kisvárosban lakom. És te?' },
+              { question: 'Do you live in a city or a small town?', meaning: 'Nagyvárosban vagy kisvárosban laksz?', starters: ['I live in a …', 'I live near …'], example: 'I live in a city. What about you?', exampleHu: 'Egy nagyvárosban lakom. És te?' }
+            ]
+          },
+          {
+            label: '3. kör · Amit szeretek', lines: [4, 5], repeatLine: 5,
+            change: 'Most mondd el, te mit szeretsz csinálni! Egy vagy két időtöltés is elég.',
+            vocabHints: [ ['I like …', 'Szeretek …'], ['cooking', 'főzni'], ['watching films', 'filmeket nézni'], ['reading', 'olvasni'], ['walking', 'sétálni'], ['listening to music', 'zenét hallgatni'] ],
+            answers: [
+              { question: 'What do you like doing?', meaning: 'Mit szeretsz csinálni?', starters: ['I like …', 'In my free time, I like …'], example: 'I like cooking and watching films.', exampleHu: 'Szeretek főzni és filmeket nézni.' },
+              { question: 'What do you like doing in your free time?', meaning: 'Mit szeretsz csinálni a szabadidődben?', starters: ['In my free time, I like …', 'I like …'], example: 'I like reading and walking.', exampleHu: 'Szeretek olvasni és sétálni.' }
+            ]
+          }
+        ],
+        stages: {
+          listen: { title: 'Először hallgasd meg.', instruction: 'Egy rövid párbeszéd. Koppints a gombra, és figyeld a mondatokat.' },
+          repeat: { title: 'Most te jössz.', instruction: 'Mondd utána hangosan.' },
+          change: { title: 'Legyen a tiéd.' },
+          answer: { title: 'Válaszolj a saját szavaiddal.', instruction: 'Mondd ki hangosan a válaszod! Utána a gombbal megnézhetsz egy példát.' }
+        },
+        tasks: [
+          { id: 'r1-listen', round: 0, stage: 'listen' },
+          { id: 'r1-repeat', round: 0, stage: 'repeat' },
+          { id: 'r1-change', round: 0, stage: 'change' },
+          { id: 'r1-answer', round: 0, stage: 'answer' },
+          { id: 'r2-listen', round: 1, stage: 'listen' },
+          { id: 'r2-repeat', round: 1, stage: 'repeat' },
+          { id: 'r2-change', round: 1, stage: 'change' },
+          { id: 'r2-answer', round: 1, stage: 'answer' },
+          { id: 'r3-listen', round: 2, stage: 'listen' },
+          { id: 'r3-repeat', round: 2, stage: 'repeat' },
+          { id: 'r3-change', round: 2, stage: 'change' },
+          { id: 'mixed-final', round: 2, stage: 'answer', mixed: true }
+        ],
+        shortTaskIds: ['r1-change', 'r1-answer', 'r2-change', 'r3-change', 'mixed-final'],
+        mixed: {
+          label: '3. kör · Minden együtt', title: 'Egy kis beszélgetés.',
+          instruction: 'Válaszolj hangosan erre a három kérdésre, ebben a sorrendben! Most nincs előtted mintamondat. Nyugodtan gondolkodj.',
+          starters: ['I live in …', 'I like …'],
+          vocabHints: [ ["I'm …", '… vagyok'], ['a small town', 'egy kisváros'], ['a city', 'egy nagyváros'], ['cooking', 'főzni'], ['reading', 'olvasni'], ['watching films', 'filmeket nézni'] ]
+        },
+        feedbackPrompt: "I'm learning English (about A2). I will say a few sentences about myself: my name, where I live, and what I like doing. Please listen, then give me only ONE short correction and one better version of my sentence. Speak slowly and simply. Then ask me one easy follow-up question."
+      };
+
+      const KEY = 'sugi_speak_v1';
+      const $ = id => document.getElementById(id);
+      const sequence = mode => mode === 'short'
+        ? LESSON.shortTaskIds.map(id => LESSON.tasks.find(task => task.id === id))
+        : LESSON.tasks;
+      function localDay() {
+        const now = new Date();
+        return [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-');
+      }
+      function freshState() {
+        return {
+          schemaVersion: 1, mode: null, cursor: 0, completedTaskIds: [],
+          fullCompleted: false, practiceDays: [], answersSpokenToday: { date: localDay(), count: 0 },
+          // Session metadata keeps question variants, shuffled order and help stable on reload.
+          runVariant: 1, finalOrder: [1, 0, 2], helpedTaskIds: [],
+          runs: { full: null, short: null }
+        };
+      }
+      function validDate(value) {
+        if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+        const [y, m, d] = value.split('-').map(Number);
+        const date = new Date(y, m - 1, d);
+        return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d;
+      }
+      function runSnapshot(value) {
+        return {
+          cursor: value.cursor, completedTaskIds: [...value.completedTaskIds],
+          runVariant: value.runVariant, finalOrder: [...value.finalOrder], helpedTaskIds: [...value.helpedTaskIds]
+        };
+      }
+      function validRun(value, mode) {
+        if (!value || typeof value !== 'object') return false;
+        const tasks = sequence(mode);
+        if (!Number.isInteger(value.cursor) || value.cursor < 0 || value.cursor > tasks.length) return false;
+        if (!Array.isArray(value.completedTaskIds)) return false;
+        if (![0, 1].includes(value.runVariant) || !Array.isArray(value.finalOrder) || value.finalOrder.length !== 3 || [...value.finalOrder].sort().join(',') !== '0,1,2') return false;
+        if (!Array.isArray(value.helpedTaskIds) || new Set(value.helpedTaskIds).size !== value.helpedTaskIds.length) return false;
+        if (!value.helpedTaskIds.every(id => tasks.some(task => task.id === id && task.stage === 'answer'))) return false;
+        const completed = value.completedTaskIds;
+        const hasCurrentAnswer = tasks[value.cursor]?.stage === 'answer' && completed.length === value.cursor + 1;
+        if (completed.length !== value.cursor && !hasCurrentAnswer) return false;
+        if (!completed.every((id, index) => id === tasks[index]?.id)) return false;
+        return mode !== null || (value.cursor === 0 && completed.length === 0 && value.helpedTaskIds.length === 0);
+      }
+      function validState(value) {
+        if (!value || value.schemaVersion !== 1 || ![null, 'full', 'short'].includes(value.mode) || !validRun(value, value.mode)) return false;
+        if (typeof value.fullCompleted !== 'boolean' || !Array.isArray(value.practiceDays)) return false;
+        if (!value.practiceDays.every(validDate) || new Set(value.practiceDays).size !== value.practiceDays.length) return false;
+        const daily = value.answersSpokenToday;
+        if (!daily || !validDate(daily.date) || !Number.isSafeInteger(daily.count) || daily.count < 0) return false;
+        // Older v1 saves have just the active run. Validate before upgrading them.
+        if ('runs' in value) {
+          if (!value.runs || typeof value.runs !== 'object') return false;
+          if (!['full', 'short'].every(mode => value.runs[mode] === null || validRun(value.runs[mode], mode))) return false;
+          if (value.mode && (!value.runs[value.mode] || JSON.stringify(runSnapshot(value)) !== JSON.stringify(runSnapshot(value.runs[value.mode])))) return false;
+        }
+        return true;
+      }
+
+      let storageOK = true;
+      function storageFailed() {
+        storageOK = false;
+        $('storage-notice').hidden = false;
+      }
+      function readState() {
+        try {
+          const raw = localStorage.getItem(KEY);
+          if (raw === null) return freshState();
+          const parsed = JSON.parse(raw);
+          if (!validState(parsed)) throw new Error('Invalid save');
+          if (!('runs' in parsed)) {
+            parsed.runs = { full: null, short: null };
+            if (parsed.mode) parsed.runs[parsed.mode] = runSnapshot(parsed);
+          }
+          return parsed;
+        } catch (_) {
+          // Never replace an unreadable/corrupt save. This page now uses memory only.
+          storageFailed();
+          return freshState();
+        }
+      }
+      let state = readState();
+      function saveState() {
+        if (state.mode) state.runs[state.mode] = runSnapshot(state);
+        if (!storageOK) return;
+        try { localStorage.setItem(KEY, JSON.stringify(state)); }
+        catch (_) { storageFailed(); }
+      }
+      function syncDay() {
+        const today = localDay();
+        if (state.answersSpokenToday.date === today) return;
+        state.answersSpokenToday = { date: today, count: 0 };
+        saveState();
+        if (screen === 'finish') {
+          updateFinishSummary();
+          $('leaf-note').textContent = 'A leveleid megmaradnak. Ma is kezdhetsz egy új beszélgetést.';
+        }
+      }
+
+      // Prefer local English; otherwise let an English voice or the browser handle it.
+      let synth = null;
+      let voice = null;
+      let activeUtterance = null;
+      let speechToken = 0;
+      try {
+        if ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window) synth = window.speechSynthesis;
+      } catch (_) { /* Text practice remains available. */ }
+      function refreshVoices() {
+        voice = null;
+        try {
+          const englishVoices = synth ? synth.getVoices().filter(v => /^en(?:[-_]|$)/i.test(v.lang)) : [];
+          const localVoices = englishVoices.filter(v => v.localService);
+          const available = localVoices.length ? localVoices : englishVoices;
+          voice = available.find(v => /^en[-_]GB$/i.test(v.lang))
+            || available.find(v => /^en[-_]US$/i.test(v.lang)) || available[0] || null;
+        } catch (_) { /* Some browsers expose the API without usable voices. */ }
+      }
+      function cancelAudio() {
+        speechToken += 1;
+        activeUtterance = null;
+        try { if (synth) synth.cancel(); } catch (_) { /* Navigation must still work. */ }
+      }
+      function speak(text) {
+        cancelAudio();
+        refreshVoices();
+        const token = speechToken;
+        try {
+          if (!synth) throw new Error('Speech synthesis unavailable');
+          activeUtterance = new SpeechSynthesisUtterance(text);
+          if (voice) activeUtterance.voice = voice;
+          activeUtterance.lang = voice ? voice.lang : 'en-GB';
+          activeUtterance.rate = 0.9;
+          activeUtterance.onend = () => { if (token === speechToken) activeUtterance = null; };
+          activeUtterance.onerror = event => {
+            if (token !== speechToken || event.error === 'canceled' || event.error === 'interrupted') return;
+            activeUtterance = null;
+            $('audio-notice').hidden = false;
+          };
+          $('audio-notice').hidden = true;
+          synth.speak(activeUtterance);
+        } catch (_) { $('audio-notice').hidden = false; }
+      }
+      if (synth) {
+        if (typeof synth.addEventListener === 'function') synth.addEventListener('voiceschanged', refreshVoices);
+        else synth.onvoiceschanged = refreshVoices;
+      }
+
+      function node(tag, text, className) {
+        const element = document.createElement(tag);
+        if (text !== undefined) element.textContent = text;
+        if (className) element.className = className;
+        return element;
+      }
+      function button(text, action, secondary = false) {
+        const element = node('button', text, secondary ? 'button secondary' : 'button');
+        element.type = 'button';
+        element.addEventListener('click', action);
+        return element;
+      }
+      function english(text, className = 'english') {
+        const element = node('p', text, className);
+        element.lang = 'en';
+        return element;
+      }
+      function modelLine(line) {
+        const wrapper = node('div', undefined, 'dialogue-line');
+        wrapper.append(english(line.en), node('p', line.hu, 'gloss'));
+        return wrapper;
+      }
+      function wordBank(hints) {
+        const wrapper = node('div', undefined, 'word-bank');
+        wrapper.append(node('h3', 'Szavak, amik segíthetnek'));
+        const list = node('dl');
+        hints.forEach(([en, hu]) => {
+          const item = node('div');
+          const term = node('dt', en);
+          term.lang = 'en';
+          item.append(term, node('dd', hu));
+          list.append(item);
+        });
+        wrapper.append(list);
+        return wrapper;
+      }
+      function spokenLine(index) { return LESSON.dialogue[index].en.replace(/^[AB]:\s*/, ''); }
+      function answerContent(task) {
+        if (!task.mixed) return LESSON.rounds[task.round].answers[state.runVariant];
+        const answers = state.finalOrder.map(index => LESSON.rounds[index].answers[1 - state.runVariant]);
+        return {
+          questions: answers.map(answer => ({ en: answer.question, hu: answer.meaning })),
+          starters: LESSON.mixed.starters,
+          example: answers.map(answer => answer.example).join(' '),
+          exampleHu: answers.map(answer => answer.exampleHu).join(' ')
+        };
+      }
+
+      let screen = 'home';
+      let actionAt = -Infinity;
+      // Ignore rapid second taps across newly rendered tasks and answer phases.
+      function acceptTap() {
+        if (performance.now() - actionAt < 450) return false;
+        actionAt = performance.now();
+        return true;
+      }
+      function isActive() { return state.mode !== null && state.cursor < sequence(state.mode).length; }
+      function showScreen(name, focus = true) {
+        cancelAudio();
+        screen = name;
+        ['home', 'practice', 'finish'].forEach(id => { $(id + '-screen').hidden = id !== name; });
+        document.title = 'Sugi Speak · ' + ({ home: 'Ma', practice: 'Gyakorlás', finish: 'Lezárás' })[name];
+        if (focus) {
+          const heading = $(({ home: 'home-heading', practice: 'task-heading', finish: 'finish-heading' })[name]);
+          heading.focus();
+          window.scrollTo(0, 0);
+        }
+      }
+      function renderGarden() {
+        const leaves = $('plant-leaves');
+        leaves.replaceChildren();
+        const count = state.practiceDays.length;
+        const top = 113 - Math.max(0, count - 1) * 17;
+        $('plant').setAttribute('viewBox', '0 ' + Math.min(0, top - 45) + ' 320 ' + (180 - Math.min(0, top - 45)));
+        $('plant-stem').setAttribute('d', 'M160 133V' + Math.min(87, top - 6));
+        state.practiceDays.forEach((day, index) => {
+          const leaf = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          const y = 113 - index * 17;
+          const right = index % 2 === 0;
+          leaf.setAttribute('d', right
+            ? `M160 ${y}C166 ${y - 25} 192 ${y - 29} 193 ${y - 29}C193 ${y - 8} 181 ${y + 3} 160 ${y}Z`
+            : `M160 ${y}C154 ${y - 25} 128 ${y - 29} 127 ${y - 29}C127 ${y - 8} 139 ${y + 3} 160 ${y}Z`);
+          leaf.setAttribute('data-day', day);
+          leaves.append(leaf);
+        });
+        $('garden-note').textContent = count ? 'A leveleid megmaradnak. A kert holnap is megvár.' : 'Az első levél egy befejezett beszélgetős menet után nő.';
+      }
+      function showHome(focus = true) {
+        syncDay();
+        const fullRun = state.runs.full;
+        $('resume-note').textContent = fullRun && fullRun.cursor < sequence('full').length
+          ? 'Innen folytatod: ' + (fullRun.cursor + 1) + ' / ' + sequence('full').length + ' · teljes menet'
+          : 'Ma is kezdhetsz egy új beszélgetést.';
+        $('full-completed-note').hidden = !state.fullCompleted;
+        $('rest-note').hidden = true;
+        renderGarden();
+        showScreen('home', focus);
+      }
+      function shuffledOrder() {
+        const order = [0, 1, 2];
+        for (let i = order.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [order[i], order[j]] = [order[j], order[i]];
+        }
+        return order.join(',') === '0,1,2' ? [1, 2, 0] : order;
+      }
+      function start(mode) {
+        if (screen !== 'home') return;
+        actionAt = performance.now();
+        syncDay();
+        if (state.mode) state.runs[state.mode] = runSnapshot(state);
+        state.mode = mode;
+        const run = state.runs[mode];
+        if (run && run.cursor < sequence(mode).length) {
+          Object.assign(state, runSnapshot(run));
+        } else {
+          state.cursor = 0;
+          state.completedTaskIds = [];
+          state.helpedTaskIds = [];
+          state.runVariant = 1 - (run ? run.runVariant : state.runVariant);
+          state.finalOrder = shuffledOrder();
+        }
+        saveState();
+        renderPractice();
+      }
+      function renderPractice(focus = true) {
+        syncDay();
+        const tasks = sequence(state.mode);
+        const task = tasks[state.cursor];
+        if (!task) { showHome(focus); return; }
+        cancelAudio();
+        const round = task.mixed ? null : LESSON.rounds[task.round];
+        const stage = LESSON.stages[task.stage];
+        const content = $('task-content');
+        const actions = $('task-actions');
+        content.replaceChildren();
+        actions.replaceChildren();
+        $('progress').textContent = (state.cursor + 1) + ' / ' + tasks.length;
+        $('round-label').textContent = task.mixed ? LESSON.mixed.label : round.label;
+        $('task-heading').textContent = task.mixed ? LESSON.mixed.title : stage.title;
+        $('mode-note').textContent = state.mode === 'short' ? 'Rövid menet · kb. 12 perc' : 'Gyakorlás · a saját tempódban';
+        content.append(node('p', task.mixed ? LESSON.mixed.instruction : (round.change && task.stage === 'change' ? round.change : stage.instruction), 'instruction'));
+
+        const handlePrimary = () => {
+          if (screen !== 'practice' || tasks[state.cursor]?.id !== task.id || !acceptTap()) return;
+          syncDay();
+          if (task.stage === 'answer' && !state.completedTaskIds.includes(task.id)) {
+            state.completedTaskIds.push(task.id);
+            state.answersSpokenToday.count += 1;
+            saveState();
+            renderPractice(false);
+            $('example-heading').focus();
+            return;
+          }
+          if (!state.completedTaskIds.includes(task.id)) state.completedTaskIds.push(task.id);
+          state.cursor += 1;
+          if (state.cursor === tasks.length) {
+            const eligible = tasks.some(item => item.stage === 'answer' && state.completedTaskIds.includes(item.id));
+            const today = localDay();
+            const newLeaf = eligible && !state.practiceDays.includes(today);
+            if (newLeaf) state.practiceDays.push(today);
+            if (state.mode === 'full') state.fullCompleted = true;
+            saveState();
+            showFinish(newLeaf);
+          } else {
+            saveState();
+            renderPractice();
+          }
+        };
+
+        if (task.stage === 'listen') {
+          round.lines.forEach(index => content.append(modelLine(LESSON.dialogue[index])));
+          content.append(button('▶ Meghallgatom / újra hallgatom', () => speak(round.lines.map(spokenLine).join(' ')), true));
+        } else if (task.stage === 'repeat') {
+          content.append(modelLine(LESSON.dialogue[round.repeatLine]));
+          content.append(button('▶ Még egyszer', () => speak(spokenLine(round.repeatLine)), true));
+        } else if (task.stage === 'change') {
+          content.append(wordBank(round.vocabHints));
+        } else {
+          const answer = answerContent(task);
+          const questions = answer.questions || [{ en: answer.question, hu: answer.meaning }];
+          questions.forEach(question => {
+            const wrapper = node('div', undefined, 'question');
+            wrapper.append(english(question.en), node('p', question.hu, 'gloss'));
+            content.append(wrapper);
+          });
+          content.append(button('▶ Kérdés meghallgatása', () => speak(questions.map(question => question.en).join(' ')), true));
+          const help = node('div', undefined, 'help');
+          if (!state.helpedTaskIds.includes(task.id)) {
+            const helpButton = button('Segíts', () => {
+              if (screen !== 'practice' || tasks[state.cursor]?.id !== task.id) return;
+              state.helpedTaskIds.push(task.id);
+              saveState();
+              renderPractice(false);
+              $('help-heading').focus();
+            }, true);
+            help.append(helpButton);
+          } else {
+            const heading = node('h3', 'Kezdheted így:');
+            heading.id = 'help-heading';
+            heading.tabIndex = -1;
+            const list = node('ul', undefined, 'starters');
+            answer.starters.forEach(starter => {
+              const item = node('li', starter);
+              item.lang = 'en';
+              list.append(item);
+            });
+            help.append(heading, list);
+            if (task.mixed) help.append(wordBank(LESSON.mixed.vocabHints));
+          }
+          content.append(help);
+          if (state.completedTaskIds.includes(task.id)) {
+            const comparison = node('div', undefined, 'comparison');
+            const heading = node('h2', 'Egy lehetséges válasz');
+            heading.id = 'example-heading';
+            heading.tabIndex = -1;
+            comparison.append(heading, node('p', 'A te válaszod eltérhet. Figyeld meg, te hogyan mondtad!', 'small'), english(answer.example), node('p', answer.exampleHu, 'gloss'));
+            comparison.append(button('▶ Példa meghallgatása', () => speak(answer.example), true));
+            content.append(comparison);
+          }
+        }
+        const said = task.stage === 'answer' && state.completedTaskIds.includes(task.id);
+        const primary = button(task.stage === 'listen' || said ? 'Tovább' : 'Kimondtam', handlePrimary);
+        primary.id = 'primary-action';
+        actions.append(primary);
+        showScreen('practice', focus);
+      }
+      function updateFinishSummary() {
+        $('finish-summary').textContent = 'Ma ' + state.answersSpokenToday.count + ' saját választ mondtál ki.';
+      }
+      function showFinish(newLeaf) {
+        updateFinishSummary();
+        $('finish-mode').textContent = state.mode === 'short'
+          ? 'A rövid menetet befejezted. A teljes leckét máskor is végiggyakorolhatod.'
+          : 'A teljes leckét végiggyakoroltad. Bármikor visszatérhetsz hozzá.';
+        $('leaf-note').textContent = newLeaf ? 'Ma új levél nőtt a beszédkertedben.' : 'A mai leveled már ott van a kertben. Minden leveled megmarad.';
+        document.querySelector('.feedback').open = false;
+        $('copy-status').hidden = true;
+        showScreen('finish');
+      }
+
+      $('lesson-title').textContent = LESSON.title;
+      $('feedback-prompt').textContent = LESSON.feedbackPrompt;
+      $('continue-button').addEventListener('click', () => start('full'));
+      $('short-button').addEventListener('click', () => start('short'));
+      $('home-button').addEventListener('click', () => showHome());
+      $('finish-home-button').addEventListener('click', () => showHome());
+      $('rest-button').addEventListener('click', () => { $('rest-note').hidden = false; });
+      $('restart-button').addEventListener('click', () => {
+        cancelAudio();
+        if (!window.confirm('Újrakezded ezt a menetet? A feladatok az elejéről indulnak. A leveleid, a mai válaszaid száma és a teljes lecke korábbi befejezése megmarad.')) return;
+        state.cursor = 0;
+        state.completedTaskIds = [];
+        state.helpedTaskIds = [];
+        if (state.mode === null) state.mode = 'full';
+        saveState();
+        if (screen === 'practice') renderPractice();
+        else showHome();
+      });
+      $('copy-button').addEventListener('click', async () => {
+        const field = $('feedback-prompt');
+        const copyButton = $('copy-button');
+        copyButton.disabled = true;
+        try {
+          await navigator.clipboard.writeText(field.value);
+          $('copy-status').textContent = 'Kimásolva. Beillesztheted a ChatGPT-be.';
+        } catch (_) {
+          field.focus();
+          field.select();
+          field.setSelectionRange(0, field.value.length);
+          $('copy-status').textContent = 'A másolás most nem sikerült. Kijelöltem a szöveget. Tartsd rajta az ujjad, és válaszd a Másolás lehetőséget.';
+        } finally {
+          copyButton.disabled = false;
+          $('copy-status').hidden = false;
+        }
+      });
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) cancelAudio();
+        else syncDay();
+      });
+      window.addEventListener('focus', syncDay);
+      window.addEventListener('pagehide', cancelAudio);
+      syncDay();
+      saveState(); // Detect write-blocked storage before the learner begins.
+      refreshVoices();
+      // A finished run always reopens at home; an active run resumes even at task 0.
+      if (isActive()) renderPractice(false);
+      else showHome(false);
+    })();
+  </script>
+</body>
+</html>
