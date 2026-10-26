@@ -132,6 +132,9 @@
     .lesson-top { margin-bottom: .5rem; }
     .lesson-top .eyebrow { margin: 0; flex: 1; }
     .lesson-art { width: 90px; height: 76px; flex: none; }
+    .hero-art { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 1.25rem; margin: .25rem 0 1.25rem; }
+    .lesson-photo { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border-radius: .9rem; margin-bottom: 1rem; background: var(--soft); }
+    .finish-art { display: block; width: min(100%, 15rem); height: auto; border-radius: 1.25rem; margin: 0 0 1.25rem; }
     .art-soft { fill: var(--soft); }
     .art-green { fill: var(--green); }
     .art-accent { fill: var(--accent); }
@@ -223,8 +226,10 @@
         <div class="home-top"><p class="eyebrow">Ma · egy kis idő magadra</p><button id="voice-open" class="icon-button" type="button" aria-label="Hang"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-gear"/></svg></button></div>
         <h1 id="home-heading" tabindex="-1">Szia, Sugi!</h1>
         <p class="muted">Egy kis angol, a saját hangodon.<br>Nem kell sietned.</p>
+        <img class="hero-art" src="art/home.webp" alt="" width="800" height="447" decoding="async">
         <div class="card lesson">
-          <div class="lesson-top"><p id="lesson-label" class="eyebrow"></p><div id="lesson-art" aria-hidden="true"></div></div>
+          <img id="lesson-art" class="lesson-photo" alt="" width="640" height="640" decoding="async">
+          <div class="lesson-top"><p id="lesson-label" class="eyebrow"></p></div>
           <h2 id="lesson-title"></h2>
           <p class="muted small"><span id="lesson-description"></span><br>Teljes menet: kb. 15–20 perc.</p>
           <p id="resume-note" class="small muted"></p>
@@ -257,7 +262,7 @@
         <div id="task-actions" class="actions"></div>
       </section>
       <section id="finish-screen" aria-labelledby="finish-heading" hidden>
-        <div class="finish-icon" aria-hidden="true"><svg viewBox="0 0 96 80"><use href="#art-finish"/></svg></div>
+        <img class="finish-art" src="art/finish.webp" alt="" width="640" height="640" decoding="async">
         <p class="eyebrow">Lezárás</p>
         <h1 id="finish-heading" tabindex="-1">Mára ennyi.<br>Jó, hogy beszéltél.</h1>
         <p id="finish-summary"></p>
@@ -1709,7 +1714,7 @@
         const targetProgress = state.lessons[targetId];
         const fullRun = targetProgress.runs.full;
         $('lesson-label').textContent = targetId + ' · Mai lecke';
-        $('lesson-art').replaceChildren(icon(({ L01: 'art-handshake', L02: 'art-morning', L03: 'art-cafe' })[targetId], 'lesson-art'));
+        $('lesson-art').src = 'art/' + targetId.toLowerCase() + '.webp';
         $('lesson-title').textContent = target.title;
         $('lesson-description').textContent = target.description;
         $('resume-note').textContent = !allCompleted() && fullRun && fullRun.cursor < sequence('full', targetId).length
