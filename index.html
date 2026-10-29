@@ -4,43 +4,43 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#faf4eb">
+  <meta name="theme-color" content="#faf6ef">
   <meta name="description" content="Egy kis angol, a saját hangodon. Sugi személyes beszédgyakorlója.">
   <link rel="icon" href="data:,">
   <title>Sugi Speak · Ma</title>
   <style>
     :root {
       color-scheme: light dark;
-      --bg: #faf4eb;
-      --surface: #fffdf7;
-      --ink: #283c31;
-      --muted: #586454;
-      --green: #2e563e;
+      --bg: #faf6ef;
+      --surface: #fffdf9;
+      --ink: #22283d;
+      --muted: #565c72;
+      --green: #2f3d73;
       --on-green: #ffffff;
-      --soft: #ecf0e3;
-      --line: #d8d2c4;
-      --accent: #955039;
+      --soft: #eceef9;
+      --line: #dcd6cb;
+      --accent: #a8452c;
       --warning-bg: #fff0b8;
       --warning-ink: #54400a;
-      --focus: #a14620;
-      --listen: #edf1e7; --repeat: #f4ede3; --change: #f8eadf; --answer: #edf0e5;
+      --focus: #a8452c;
+      --listen: #e8eefb; --repeat: #fbede5; --change: #fcf2dc; --answer: #efe9f9;
       --leaf-one: #315d42; --leaf-two: #52764f; --leaf-three: #719060; --pot: #a55f46; --pot-light: #d49b78;
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #17251f;
-        --surface: #213229;
-        --ink: #f5f0e5;
-        --muted: #c4ccba;
-        --green: #bfd6ad;
-        --on-green: #1d3125;
-        --soft: #2a3c2d;
-        --line: #58664f;
-        --accent: #efb59c;
+        --bg: #191c29;
+        --surface: #232738;
+        --ink: #f4f1ea;
+        --muted: #c3c6d6;
+        --green: #b8c3f3;
+        --on-green: #1b2142;
+        --soft: #2b3049;
+        --line: #4a506a;
+        --accent: #f2a98f;
         --warning-bg: #4a3c13;
         --warning-ink: #fff0b8;
         --focus: #ffc391;
-        --listen: #283a2e; --repeat: #3b3329; --change: #3f3028; --answer: #2b3b30;
+        --listen: #26304d; --repeat: #3b2e2c; --change: #393424; --answer: #312a4b;
         --leaf-one: #bad5a8; --leaf-two: #98bb84; --leaf-three: #c5dcb0; --pot: #d39274; --pot-light: #f0c4a4;
       }
     }
@@ -56,7 +56,7 @@
     h1:focus, h2:focus { outline: none; }
     .shell { width: min(100%, 35rem); margin-inline: auto; padding: 1.25rem 1.25rem max(1.25rem, env(safe-area-inset-bottom)); }
     header { display: flex; align-items: center; gap: .6rem; padding: .25rem 0 1.75rem; }
-    .brand-mark { width: 28px; height: 32px; color: var(--green); flex: none; }
+    .brand-mark { width: 28px; height: 32px; color: var(--leaf-one); flex: none; }
     .brand { font-weight: 750; letter-spacing: -.03em; font-size: 1.2rem; }
     .brand span { font-weight: 450; color: var(--muted); }
     .eyebrow { margin: 0 0 .5rem; color: var(--accent); font-size: .8rem; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
@@ -82,7 +82,7 @@
     .warning { background: var(--warning-bg); color: var(--warning-ink); }
     .garden { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); text-align: center; }
     .garden h2 { font-size: 1.65rem; }
-    .plant { display: block; width: 100%; height: 180px; margin: .25rem auto 1rem; color: var(--green); }
+    .plant { display: block; width: 100%; height: 180px; margin: .25rem auto 1rem; color: var(--leaf-one); }
     .plant .pot { fill: var(--accent); }
     .plant .soil { stroke: var(--bg); }
     .practice-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: -1rem 0 1.25rem; }
@@ -132,6 +132,9 @@
     .lesson-top { margin-bottom: .5rem; }
     .lesson-top .eyebrow { margin: 0; flex: 1; }
     .lesson-art { width: 90px; height: 76px; flex: none; }
+    .hero-art { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 1.25rem; margin: .25rem 0 1.25rem; }
+    .lesson-photo { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border-radius: .9rem; margin-bottom: 1rem; background: var(--soft); }
+    .finish-art { display: block; width: min(100%, 15rem); height: auto; border-radius: 1.25rem; margin: 0 0 1.25rem; }
     .art-soft { fill: var(--soft); }
     .art-green { fill: var(--green); }
     .art-accent { fill: var(--accent); }
@@ -153,7 +156,7 @@
     .stage-mark { display: flex; align-items: center; gap: .6rem; margin-bottom: 1.1rem; color: var(--green); font-size: .8rem; font-weight: 700; letter-spacing: .04em; }
     .stage-mark svg { width: 30px; height: 30px; flex: none; }
     .stage-mark span { overflow-wrap: anywhere; }
-    .plant { display: block; width: 100%; max-width: 22rem; height: auto; margin: .25rem auto 1rem; color: var(--green); overflow: visible; }
+    .plant { display: block; width: 100%; max-width: 22rem; height: auto; margin: .25rem auto 1rem; color: var(--leaf-one); overflow: visible; }
     .plant .leaf { fill: var(--leaf-one); }
     .plant .leaf-1 { fill: var(--leaf-two); }
     .plant .leaf-2 { fill: var(--leaf-three); }
@@ -223,8 +226,10 @@
         <div class="home-top"><p class="eyebrow">Ma · egy kis idő magadra</p><button id="voice-open" class="icon-button" type="button" aria-label="Hang"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-gear"/></svg></button></div>
         <h1 id="home-heading" tabindex="-1">Szia, Sugi!</h1>
         <p class="muted">Egy kis angol, a saját hangodon.<br>Nem kell sietned.</p>
+        <img class="hero-art" src="art/home.webp" alt="" width="800" height="447" decoding="async">
         <div class="card lesson">
-          <div class="lesson-top"><p id="lesson-label" class="eyebrow"></p><div id="lesson-art" aria-hidden="true"></div></div>
+          <img id="lesson-art" class="lesson-photo" alt="" width="640" height="640" decoding="async">
+          <div class="lesson-top"><p id="lesson-label" class="eyebrow"></p></div>
           <h2 id="lesson-title"></h2>
           <p class="muted small"><span id="lesson-description"></span><br>Teljes menet: kb. 15–20 perc.</p>
           <p id="resume-note" class="small muted"></p>
@@ -257,7 +262,7 @@
         <div id="task-actions" class="actions"></div>
       </section>
       <section id="finish-screen" aria-labelledby="finish-heading" hidden>
-        <div class="finish-icon" aria-hidden="true"><svg viewBox="0 0 96 80"><use href="#art-finish"/></svg></div>
+        <img class="finish-art" src="art/finish.webp" alt="" width="640" height="640" decoding="async">
         <p class="eyebrow">Lezárás</p>
         <h1 id="finish-heading" tabindex="-1">Mára ennyi.<br>Jó, hogy beszéltél.</h1>
         <p id="finish-summary"></p>
@@ -1709,7 +1714,7 @@
         const targetProgress = state.lessons[targetId];
         const fullRun = targetProgress.runs.full;
         $('lesson-label').textContent = targetId + ' · Mai lecke';
-        $('lesson-art').replaceChildren(icon(({ L01: 'art-handshake', L02: 'art-morning', L03: 'art-cafe' })[targetId], 'lesson-art'));
+        $('lesson-art').src = 'art/' + targetId.toLowerCase() + '.webp';
         $('lesson-title').textContent = target.title;
         $('lesson-description').textContent = target.description;
         $('resume-note').textContent = !allCompleted() && fullRun && fullRun.cursor < sequence('full', targetId).length
